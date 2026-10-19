@@ -322,6 +322,41 @@
             <!-- Floating Core Readouts -->
             <div class="core-tag top-tag">[ CORE_FREQ: 2.40 GHz ]</div>
             <div class="core-tag bot-tag">[ TELEMETRY: NOMINAL ]</div>
+
+            <!-- 5-Second Hover Identity Dossier -->
+            <div class="holo-dossier" id="holo-dossier" aria-hidden="true">
+              <div class="dossier-scanner-line"></div>
+              <div class="dossier-header">
+                <span class="dossier-status-dot"></span>
+                <span class="dossier-title">// IDENTITY DECRYPTED</span>
+                <button class="dossier-close" id="dossier-close" type="button" aria-label="Close dossier">&times;</button>
+              </div>
+              <div class="dossier-body">
+                <div class="dossier-row">
+                  <span class="dossier-label">Name :</span>
+                  <span class="dossier-val highlight-val">John S. Bautista Jr.</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="dossier-label">Age :</span>
+                  <span class="dossier-val">22</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="dossier-label">Sex :</span>
+                  <span class="dossier-val">Male</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="dossier-label">No. :</span>
+                  <a href="tel:+63971727130" class="dossier-val highlight-link">+63971727130</a>
+                </div>
+                <div class="dossier-row">
+                  <span class="dossier-label">Email :</span>
+                  <a href="mailto:johnbautista1424@gmail.com" class="dossier-val highlight-link">johnbautista1424@gmail.com</a>
+                </div>
+              </div>
+              <div class="dossier-footer">
+                <span>CLEARANCE LEVEL 5 // VERIFIED</span>
+              </div>
+            </div>
           </div>
 
           <!-- DIAGNOSTIC HUD TERMINAL PANEL -->
@@ -1106,7 +1141,7 @@
               <div class="c-icon">&#9993;</div>
               <div class="c-info">
                 <span class="c-label">ELECTRONIC MAIL</span>
-                <a href="mailto:johnbautistajr@gmail.com" class="c-val highlight-cyan">johnbautistajr@gmail.com</a>
+                <a href="mailto:johnbautista1424@gmail.com" class="c-val highlight-cyan">johnbautista1424@gmail.com</a>
               </div>
             </div>
 
@@ -1115,7 +1150,7 @@
               <div class="c-icon">&#9742;</div>
               <div class="c-info">
                 <span class="c-label">TELECOMMUNICATION</span>
-                <a href="tel:+639971727130" class="c-val">+63 997 172 7130</a>
+                <a href="tel:+63971727130" class="c-val">+63971727130</a>
               </div>
             </div>
 
@@ -1141,7 +1176,7 @@
 
           <!-- Primary Contact Actions -->
           <div class="contact-actions">
-            <a href="mailto:johnbautistajr@gmail.com?subject=Inquiry%20regarding%20Computer%20Engineering%20Role" class="btn btn-primary">
+            <a href="mailto:johnbautista1424@gmail.com" class="btn btn-primary">
               <span class="btn-corner tl"></span>
               <span class="btn-corner br"></span>
               <span class="btn-text">SEND DIRECT EMAIL</span>
@@ -1179,7 +1214,7 @@
       <div class="footer-left">
         <div class="footer-monogram">JB</div>
         <div class="footer-legal">
-          <span class="copy-text">&copy; 2026 JOHN BAUTISTA. ALL RIGHTS RESERVED.</span>
+          <span class="copy-text">&copy; 2026 JOHN BAUTISTA.</span>
           <span class="sub-text">COMPUTER ENGINEER // DIGITAL PORTFOLIO COMMAND CENTER</span>
         </div>
       </div>
@@ -1192,7 +1227,6 @@
       </div>
 
       <div class="footer-right">
-        <span class="tech-stack-tag">BUILT WITH HTML5 &bull; CSS3 &bull; JAVASCRIPT &bull; SVG</span>
         <a href="#hero" class="back-to-top" aria-label="Back to top">
           <span>TOP</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
@@ -1207,9 +1241,9 @@
   <!-- ========================================================
        INTERACTIVE CYBERPUNK CHIBI COMPANION (EASTER EGG)
        ======================================================== -->
-  <div class="chibi-companion" id="chibi-companion" title="Click or Drag me! I am your AI assistant companion." aria-label="Interactive Assistant Chibi">
-    <div class="chibi-speech-bubble" id="chibi-bubble">
-      <span>Systems online! Ready to assist!</span>
+  <div class="chibi-companion" id="chibi-companion" title="Click or Drag me!" aria-label="Interactive Assistant Chibi">
+    <div class="chibi-speech-bubble" id="chibi-bubble" aria-live="polite">
+      <span>Welcome to John's Portfolio!</span>
     </div>
     <div class="chibi-character" id="chibi-char">
       <img src="Interactive Chibi/idle.png" alt="Interactive Companion Chibi" id="chibi-img">

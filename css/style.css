@@ -938,6 +938,146 @@ body.initializing {
   100% { transform: rotate(15deg) skewX(6deg); }
 }
 
+/* 5-Second Hover Decrypted Dossier */
+.holo-dossier {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 90%;
+  max-width: 320px;
+  background: rgba(3, 7, 17, 0.95);
+  border: 1px solid var(--neon-cyan);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(0, 229, 255, 0.1);
+  padding: 16px 20px;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-tech), visibility 0.35s;
+  backdrop-filter: blur(10px);
+}
+
+.holo-dossier.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.dossier-scanner-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  animation: dossierScan 2.5s infinite linear;
+}
+
+@keyframes dossierScan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { top: 100%; opacity: 1; }
+  100% { top: 0%; opacity: 0.8; }
+}
+
+.dossier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-cyan);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.dossier-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan);
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.dossier-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--neon-cyan);
+  font-weight: 700;
+  flex: 1;
+}
+
+.dossier-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s ease;
+}
+
+.dossier-close:hover {
+  color: var(--neon-cyan);
+}
+
+.dossier-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.dossier-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.dossier-label {
+  color: var(--neon-blue);
+  min-width: 55px;
+  font-weight: 500;
+}
+
+.dossier-val {
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.dossier-val.highlight-val {
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 0 8px var(--neon-cyan-glow);
+}
+
+.dossier-val.highlight-link {
+  color: var(--neon-cyan);
+  text-decoration: none;
+  transition: text-shadow 0.2s;
+}
+
+.dossier-val.highlight-link:hover {
+  text-shadow: 0 0 8px var(--neon-cyan);
+  text-decoration: underline;
+}
+
+.dossier-footer {
+  margin-top: 14px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-dim);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
 /* Diagnostic Terminal Panel */
 .terminal-panel {
   width: 100%;

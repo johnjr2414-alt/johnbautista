@@ -279,12 +279,69 @@ document.addEventListener('DOMContentLoaded', () => {
   sections.forEach((sec) => navObserver.observe(sec));
 
   // =========================================================================
-  // 5. INTERACTIVE CHIBI COMPANION (PHYSICS, DRAG & DROP, SPRITES)
+  // 4.5 HOLOGRAPHIC CORE 1-SECOND HOVER DECRYPTION (AUTO-CLOSE ON LEAVE)
+  // =========================================================================
+  const holoStage = document.getElementById('holo-stage');
+  const holoDossier = document.getElementById('holo-dossier');
+  let holoTimer = null;
+
+  if (holoStage && holoDossier) {
+    const showDossier = () => {
+      holoDossier.classList.add('open');
+      holoDossier.setAttribute('aria-hidden', 'false');
+    };
+
+    const hideDossier = () => {
+      if (holoTimer) {
+        clearTimeout(holoTimer);
+        holoTimer = null;
+      }
+      holoDossier.classList.remove('open');
+      holoDossier.setAttribute('aria-hidden', 'true');
+    };
+
+    // When cursor enters: wait 1 second, then open
+    holoStage.addEventListener('mouseenter', () => {
+      if (holoTimer) clearTimeout(holoTimer);
+      holoTimer = setTimeout(() => {
+        showDossier();
+      }, 1000); // 1 second
+    });
+
+    // When cursor leaves: immediately close and cancel any pending timer
+    holoStage.addEventListener('mouseleave', () => {
+      hideDossier();
+    });
+
+    // Also support mobile tap
+    holoStage.addEventListener('click', (e) => {
+      if (!e.target.closest('.holo-dossier')) {
+        if (holoDossier.classList.contains('open')) {
+          hideDossier();
+        } else {
+          showDossier();
+        }
+      }
+    });
+  }
+
+  // =========================================================================
+  // 5. INTERACTIVE CYBERPUNK CHIBI COMPANION (PHYSICS, DRAG & DROP, SPRITES)
   // =========================================================================
   const chibi = document.getElementById('chibi-companion');
   const chibiChar = document.getElementById('chibi-char');
   const chibiImg = document.getElementById('chibi-img');
   const chibiBubble = document.getElementById('chibi-bubble');
+
+  // Show only welcome message on startup, no extra dialogue
+  if (chibiBubble) {
+    setTimeout(() => {
+      chibiBubble.classList.add('visible');
+      setTimeout(() => {
+        chibiBubble.classList.remove('visible');
+      }, 5000);
+    }, 2800);
+  }
 
   if (chibi && chibiImg) {
     const sprites = {
@@ -296,15 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
       land: 'Interactive Chibi/land.png'
     };
 
-    const dialogLines = [
-      "Welcome to John's digital command center!",
-      "Need a hardware specialist? John's got you covered!",
-      "ESP32 & IoT telemetry running at full capacity!",
-      "Check out the T.A.S.K. kiosk capstone project!",
-      "Click 'RESUME.PDF' to view verified credentials!",
-      "You can drag me anywhere around the screen!"
-    ];
-
     let isDragging = false;
     let isFalling = false;
     let isWalking = false;
@@ -314,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let initialTop = 0;
     let currentX = 0;
     let currentY = 0;
-    let bubbleTimeout = null;
     let animFrame = null;
 
     // Home base coordinates (bottom-right)
@@ -328,30 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
         y: window.innerHeight - charHeight - offsetBottom
       };
     };
-
-    // Show dialog bubble
-    const speak = (text) => {
-      if (!chibiBubble) return;
-      chibiBubble.querySelector('span').textContent = text;
-      chibiBubble.classList.add('visible');
-      if (bubbleTimeout) clearTimeout(bubbleTimeout);
-      bubbleTimeout = setTimeout(() => {
-        chibiBubble.classList.remove('visible');
-      }, 4200);
-    };
-
-    // Random idle comment every 25 seconds
-    setInterval(() => {
-      if (!isDragging && !isFalling && !isWalking) {
-        const rand = dialogLines[Math.floor(Math.random() * dialogLines.length)];
-        speak(rand);
-      }
-    }, 25000);
-
-    // Initial greeting after 5 seconds
-    setTimeout(() => {
-      speak("Systems online! Feel free to explore John's portfolio.");
-    }, 5000);
 
     // Setup initial coordinates on page load
     const setupPos = () => {
@@ -410,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const onLand = () => {
       chibiImg.src = sprites.land;
       chibiChar.style.transform = 'scale(0.92, 1.08)';
-      speak("Whew, landed! Walking back to base!");
 
       setTimeout(() => {
         chibiChar.style.transform = 'scale(1)';
@@ -430,17 +452,17 @@ document.addEventListener('DOMContentLoaded', () => {
         chibiImg.src = sprites.idle;
         chibiChar.style.transform = 'scale(1)';
         isWalking = false;
-        speak("Back at my post! Ready to assist.");
         return;
       }
 
       isWalking = true;
       chibiImg.src = sprites.walk;
 
-      // Flip sprite to face towards target direction
-      // Default sprite faces left. If target is to the right (distance > 0), scaleX(-1) to face right
+      // The walk sprite naturally faces right or left.
+      // In the previous version, scaleX(-1) made it walk backwards.
+      // Invert the mirror logic so it faces forward in the walking direction:
       const walkRight = distance > 0;
-      chibiChar.style.transform = walkRight ? 'scaleX(-1)' : 'scaleX(1)';
+      chibiChar.style.transform = walkRight ? 'scaleX(1)' : 'scaleX(-1)';
 
       const walkSpeed = 6; // pixels per frame
 
@@ -482,11 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
       chibi.style.top = `${currentY}px`;
       chibiImg.src = sprites.idle;
       chibiChar.style.transform = 'scale(1)';
-      speak("Home station reached! What's next?");
     };
 
-    // Drag and Drop Logic
-    const onMouseDown = (e) => {
+    // Drag and Drop Logic using PointerEvents for universal support
+    const onPointerDown = (e) => {
       if (animFrame) cancelAnimationFrame(animFrame);
       isDragging = true;
       isFalling = false;
@@ -494,8 +515,8 @@ document.addEventListener('DOMContentLoaded', () => {
       chibiImg.src = sprites.grabbed;
       chibiChar.style.transform = 'scale(1.1)';
       
-      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      const clientX = e.clientX;
+      const clientY = e.clientY;
 
       const rect = chibi.getBoundingClientRect();
       dragStartX = clientX;
@@ -503,18 +524,17 @@ document.addEventListener('DOMContentLoaded', () => {
       initialLeft = rect.left;
       initialTop = rect.top;
 
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-      window.addEventListener('touchmove', onMouseMove, { passive: false });
-      window.addEventListener('touchend', onMouseUp);
+      window.addEventListener('pointermove', onPointerMove, { passive: false });
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
     };
 
-    const onMouseMove = (e) => {
+    const onPointerMove = (e) => {
       if (!isDragging) return;
       if (e.cancelable) e.preventDefault();
 
-      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      const clientX = e.clientX;
+      const clientY = e.clientY;
 
       const dx = clientX - dragStartX;
       const dy = clientY - dragStartY;
@@ -529,14 +549,13 @@ document.addEventListener('DOMContentLoaded', () => {
       chibi.style.top = `${currentY}px`;
     };
 
-    const onMouseUp = () => {
+    const onPointerUp = () => {
       if (!isDragging) return;
       isDragging = false;
 
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('touchmove', onMouseMove);
-      window.removeEventListener('touchend', onMouseUp);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
 
       const home = getHomePos();
       // If released already on floor, immediately walk home
@@ -550,15 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    chibi.addEventListener('mousedown', onMouseDown);
-    chibi.addEventListener('touchstart', onMouseDown, { passive: false });
-
-    chibi.addEventListener('click', (e) => {
-      if (Math.abs(e.clientX - dragStartX) < 6 && Math.abs(e.clientY - dragStartY) < 6 && !isFalling && !isWalking) {
-        const rand = dialogLines[Math.floor(Math.random() * dialogLines.length)];
-        speak(rand);
-      }
-    });
+    chibi.addEventListener('pointerdown', onPointerDown);
   }
 
 });
