@@ -938,144 +938,161 @@ body.initializing {
   100% { transform: rotate(15deg) skewX(6deg); }
 }
 
-/* 5-Second Hover Decrypted Dossier */
-.holo-dossier {
+/* Cyberpunk Holographic Core Hover HUD */
+.core-info-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  width: 90%;
-  max-width: 320px;
-  background: rgba(3, 7, 17, 0.95);
-  border: 1px solid var(--neon-cyan);
-  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(0, 229, 255, 0.1);
-  padding: 16px 20px;
-  z-index: 10;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: 290px;
+  height: 290px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(3, 7, 17, 0.96) 60%, rgba(7, 20, 38, 0.9) 100%);
+  border: 1.5px solid var(--neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.4), inset 0 0 25px rgba(0, 229, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 12;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s var(--ease-tech), visibility 0.35s;
-  backdrop-filter: blur(10px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), visibility 0.3s;
 }
 
-.holo-dossier.open {
+/* On Hover over holo-stage or when active class is added */
+.holo-stage:hover .core-info-overlay,
+.core-info-overlay.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
 }
 
-.dossier-scanner-line {
+/* Dim the JB monogram when the info HUD is active */
+.holo-stage:hover .core-monogram,
+.holo-stage.active-core .core-monogram {
+  opacity: 0.15;
+  transition: opacity 0.25s ease;
+}
+
+.core-hud-border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px dashed rgba(22, 139, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 10px;
+  overflow: hidden;
+}
+
+/* Sweeping Hologram Radar Scan Line */
+.core-scan-beam {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-  box-shadow: 0 0 8px var(--neon-cyan);
-  animation: dossierScan 2.5s infinite linear;
+  bottom: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 229, 255, 0.25) 30deg, transparent 60deg);
+  animation: radarSweep 4s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes dossierScan {
-  0% { top: 0%; opacity: 0.8; }
-  50% { top: 100%; opacity: 1; }
-  100% { top: 0%; opacity: 0.8; }
+@keyframes radarSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.dossier-header {
+.core-hud-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-cyan);
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 8px;
+  z-index: 2;
 }
 
-.dossier-status-dot {
-  width: 8px;
-  height: 8px;
+.hud-sys-led {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--neon-cyan);
   box-shadow: 0 0 6px var(--neon-cyan);
-  margin-right: 8px;
-  display: inline-block;
+  animation: ledPulse 1.2s infinite;
 }
 
-.dossier-title {
+.hud-sys-title {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   color: var(--neon-cyan);
   font-weight: 700;
-  flex: 1;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
 }
 
-.dossier-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0 4px;
-  transition: color 0.2s ease;
-}
-
-.dossier-close:hover {
-  color: var(--neon-cyan);
-}
-
-.dossier-body {
+.core-hud-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
+  width: 90%;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.74rem;
+  z-index: 2;
 }
 
-.dossier-row {
+.hud-entry {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: baseline;
+  justify-content: flex-start;
 }
 
-.dossier-label {
+.hud-label {
   color: var(--neon-blue);
-  min-width: 55px;
-  font-weight: 500;
+  min-width: 44px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: right;
 }
 
-.dossier-val {
+.hud-val {
   color: var(--text-primary);
-  word-break: break-all;
+  font-size: 0.73rem;
+  word-break: break-word;
 }
 
-.dossier-val.highlight-val {
+.hud-val.name-glow {
   color: #fff;
   font-weight: 700;
-  text-shadow: 0 0 8px var(--neon-cyan-glow);
+  text-shadow: 0 0 8px var(--neon-cyan);
 }
 
-.dossier-val.highlight-link {
+.hud-link {
   color: var(--neon-cyan);
   text-decoration: none;
+  font-size: 0.71rem;
+  word-break: break-all;
   transition: text-shadow 0.2s;
 }
 
-.dossier-val.highlight-link:hover {
-  text-shadow: 0 0 8px var(--neon-cyan);
+.hud-link:hover {
+  text-shadow: 0 0 8px #00E5FF;
   text-decoration: underline;
 }
 
-.dossier-footer {
-  margin-top: 14px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--border-dim);
+.core-hud-footer {
+  margin-top: 8px;
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.1em;
   color: var(--text-muted);
-  text-align: center;
+  opacity: 0.85;
+  z-index: 2;
 }
 
 /* Diagnostic Terminal Panel */

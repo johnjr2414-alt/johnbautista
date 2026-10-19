@@ -311,50 +311,58 @@
                 <ellipse cx="250" cy="250" rx="80" ry="90" />
               </g>
 
-              <!-- Center Anchor: Luminous Hexagon Housing the JB Monogram -->
-              <g class="holo-center-core">
+              <!-- Center Anchor: Luminous Hexagon Housing the JB Monogram & Decrypted State -->
+              <g class="holo-center-core" id="holo-center-core">
                 <polygon points="250,185 306,218 306,282 250,315 194,282 194,218" fill="#071426" stroke="#00E5FF" stroke-width="2.5" filter="url(#cyanGlow)" />
                 <polygon points="250,195 296,222 296,278 250,305 204,278 204,222" fill="#030711" stroke="#168BFF" stroke-width="1" opacity="0.9" />
-                <text x="250" y="260" text-anchor="middle" dominant-baseline="middle" class="core-monogram">JB</text>
+                <text x="250" y="260" text-anchor="middle" dominant-baseline="middle" class="core-monogram" id="core-monogram">JB</text>
               </g>
             </svg>
 
             <!-- Floating Core Readouts -->
-            <div class="core-tag top-tag">[ CORE_FREQ: 2.40 GHz ]</div>
-            <div class="core-tag bot-tag">[ TELEMETRY: NOMINAL ]</div>
+            <div class="core-tag top-tag" id="core-top-tag">[ CORE_FREQ: 2.40 GHz ]</div>
+            <div class="core-tag bot-tag" id="core-bot-tag">[ TELEMETRY: NOMINAL ]</div>
 
-            <!-- 5-Second Hover Identity Dossier -->
-            <div class="holo-dossier" id="holo-dossier" aria-hidden="true">
-              <div class="dossier-scanner-line"></div>
-              <div class="dossier-header">
-                <span class="dossier-status-dot"></span>
-                <span class="dossier-title">// IDENTITY DECRYPTED</span>
-                <button class="dossier-close" id="dossier-close" type="button" aria-label="Close dossier">&times;</button>
-              </div>
-              <div class="dossier-body">
-                <div class="dossier-row">
-                  <span class="dossier-label">Name :</span>
-                  <span class="dossier-val highlight-val">John S. Bautista Jr.</span>
+            <!-- Cyberpunk Holographic HUD Info Display (Inside the Core) -->
+            <div class="core-info-overlay" id="core-info-overlay" aria-hidden="true">
+              <div class="core-hud-border">
+                <div class="hud-corner-bracket tl"></div>
+                <div class="hud-corner-bracket tr"></div>
+                <div class="hud-corner-bracket bl"></div>
+                <div class="hud-corner-bracket br"></div>
+                <div class="core-scan-beam"></div>
+
+                <div class="core-hud-header">
+                  <span class="hud-sys-led"></span>
+                  <span class="hud-sys-title">OPERATOR // DECRYPTED</span>
                 </div>
-                <div class="dossier-row">
-                  <span class="dossier-label">Age :</span>
-                  <span class="dossier-val">22</span>
+
+                <div class="core-hud-content">
+                  <div class="hud-entry">
+                    <span class="hud-label">Name :</span>
+                    <span class="hud-val name-glow">John S. Bautista Jr.</span>
+                  </div>
+                  <div class="hud-entry">
+                    <span class="hud-label">Age :</span>
+                    <span class="hud-val">22</span>
+                  </div>
+                  <div class="hud-entry">
+                    <span class="hud-label">Sex :</span>
+                    <span class="hud-val">Male</span>
+                  </div>
+                  <div class="hud-entry">
+                    <span class="hud-label">No. :</span>
+                    <a href="tel:+63971727130" class="hud-link">+63971727130</a>
+                  </div>
+                  <div class="hud-entry">
+                    <span class="hud-label">Email :</span>
+                    <a href="mailto:johnbautista1424@gmail.com" class="hud-link">johnbautista1424@gmail.com</a>
+                  </div>
                 </div>
-                <div class="dossier-row">
-                  <span class="dossier-label">Sex :</span>
-                  <span class="dossier-val">Male</span>
+
+                <div class="core-hud-footer">
+                  <span>SEC_LVL: 05 // SYSTEM READY</span>
                 </div>
-                <div class="dossier-row">
-                  <span class="dossier-label">No. :</span>
-                  <a href="tel:+63971727130" class="dossier-val highlight-link">+63971727130</a>
-                </div>
-                <div class="dossier-row">
-                  <span class="dossier-label">Email :</span>
-                  <a href="mailto:johnbautista1424@gmail.com" class="dossier-val highlight-link">johnbautista1424@gmail.com</a>
-                </div>
-              </div>
-              <div class="dossier-footer">
-                <span>CLEARANCE LEVEL 5 // VERIFIED</span>
               </div>
             </div>
           </div>

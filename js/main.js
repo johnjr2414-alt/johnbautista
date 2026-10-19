@@ -279,48 +279,49 @@ document.addEventListener('DOMContentLoaded', () => {
   sections.forEach((sec) => navObserver.observe(sec));
 
   // =========================================================================
-  // 4.5 HOLOGRAPHIC CORE 1-SECOND HOVER DECRYPTION (AUTO-CLOSE ON LEAVE)
+  // 4.5 HOLOGRAPHIC CORE HOVER DECRYPTION (AUTO-CLOSE ON LEAVE)
   // =========================================================================
   const holoStage = document.getElementById('holo-stage');
-  const holoDossier = document.getElementById('holo-dossier');
+  const coreInfoOverlay = document.getElementById('core-info-overlay');
   let holoTimer = null;
 
-  if (holoStage && holoDossier) {
-    const showDossier = () => {
-      holoDossier.classList.add('open');
-      holoDossier.setAttribute('aria-hidden', 'false');
+  if (holoStage && coreInfoOverlay) {
+    const showCoreInfo = () => {
+      coreInfoOverlay.classList.add('open');
+      coreInfoOverlay.setAttribute('aria-hidden', 'false');
+      holoStage.classList.add('active-core');
     };
 
-    const hideDossier = () => {
+    const hideCoreInfo = () => {
       if (holoTimer) {
         clearTimeout(holoTimer);
         holoTimer = null;
       }
-      holoDossier.classList.remove('open');
-      holoDossier.setAttribute('aria-hidden', 'true');
+      coreInfoOverlay.classList.remove('open');
+      coreInfoOverlay.setAttribute('aria-hidden', 'true');
+      holoStage.classList.remove('active-core');
     };
 
-    // When cursor enters: wait 1 second, then open
+    // When cursor enters: wait 1s (or CSS hover also provides instant responsiveness)
     holoStage.addEventListener('mouseenter', () => {
       if (holoTimer) clearTimeout(holoTimer);
       holoTimer = setTimeout(() => {
-        showDossier();
-      }, 1000); // 1 second
+        showCoreInfo();
+      }, 800);
     });
 
-    // When cursor leaves: immediately close and cancel any pending timer
+    // When cursor leaves: immediately close
     holoStage.addEventListener('mouseleave', () => {
-      hideDossier();
+      hideCoreInfo();
     });
 
-    // Also support mobile tap
+    // Mobile tap support to toggle
     holoStage.addEventListener('click', (e) => {
-      if (!e.target.closest('.holo-dossier')) {
-        if (holoDossier.classList.contains('open')) {
-          hideDossier();
-        } else {
-          showDossier();
-        }
+      if (e.target.closest('.hud-link')) return; // allow clicking phone/email
+      if (coreInfoOverlay.classList.contains('open')) {
+        hideCoreInfo();
+      } else {
+        showCoreInfo();
       }
     });
   }
