@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>John Bautista | Computer Engineer — Digital Command Center</title>
+  <meta name="description" content="Portfolio of John Bautista Jr. — Computer Engineer specializing in Embedded Systems, IoT, Hardware Diagnostics, and Automation.">
+
+  <!-- Fonts: Orbitron, Oxanium, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=Oxanium:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="initializing">
+
+  <!-- 04 PHASE SYSTEM INITIALIZATION OVERLAY -->
+  <div id="boot-overlay" class="boot-overlay" aria-hidden="true">
+    <div class="boot-modal">
+      <div class="boot-header">
+        <span class="boot-led"></span>
+        <span class="boot-title">CORE BOOTLOADER v4.08 // SECURE INIT</span>
+        <span class="boot-code">SYSTEM-OK</span>
+      </div>
+      <div class="boot-progress-bar">
+        <div class="boot-progress-fill" id="boot-fill"></div>
+      </div>
+      <div class="boot-log" id="boot-log">
+        <div class="boot-line active">> PHASE 01: System initialization... [OK]</div>
+        <div class="boot-line">> PHASE 02: Routing circuit pathways... [OK]</div>
+        <div class="boot-line">> PHASE 03: Energizing holographic core... [OK]</div>
+        <div class="boot-line">> PHASE 04: Authorizing identity reveal: JOHN BAUTISTA JR.... [READY]</div>
+      </div>
+      <button id="skip-boot" class="skip-boot-btn">[ SKIP SEQUENCE ]</button>
+    </div>
+  </div>
+
+  <!-- MULTI-LAYER CIRCUIT BOARD BACKGROUND (CANVAS + SVG) -->
+  <div class="circuit-bg-container" aria-hidden="true">
+    <!-- Canvas for smooth signal pulses & particles -->
+    <canvas id="circuit-canvas"></canvas>
+    <!-- Vector Circuit Geometric Grid Traces -->
+    <svg class="circuit-svg-overlay" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <defs>
+        <linearGradient id="traceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#168BFF" stop-opacity="0.2"/>
+        </linearGradient>
+        <pattern id="dotGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#8FAFC8" fill-opacity="0.08"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#dotGrid)"/>
+      
+      <!-- Primary Architectural Traces (Layer 1 & 2) -->
+      <g class="circuit-structural-traces" stroke="#168BFF" stroke-width="1.2" fill="none" opacity="0.32">
+        <!-- Top left entry -->
+        <path d="M 0 120 L 160 120 L 220 180 L 480 180 L 520 220" />
+        <path d="M 80 0 L 80 140 L 140 200 L 320 200" />
+        <circle cx="220" cy="180" r="3" fill="#00E5FF" class="trace-node" />
+        <circle cx="480" cy="180" r="2.5" fill="#168BFF" class="trace-node" />
+        
+        <!-- Center to Right Holographic Feeders -->
+        <path d="M 520 220 L 680 220 L 740 280 L 920 280 L 980 340" />
+        <path d="M 1200 80 L 1080 80 L 1020 140 L 880 140" />
+        <path d="M 1440 240 L 1260 240 L 1180 320 L 1040 320" />
+        <circle cx="740" cy="280" r="3" fill="#00E5FF" class="trace-node" />
+        <circle cx="1020" cy="140" r="2.5" fill="#00E5FF" class="trace-node" />
+
+        <!-- Bottom branching network -->
+        <path d="M 120 700 L 280 700 L 360 780 L 600 780" />
+        <path d="M 0 460 L 180 460 L 240 520 L 420 520 L 480 580" />
+        <path d="M 1440 680 L 1280 680 L 1200 600 L 980 600" />
+        <circle cx="240" cy="520" r="2.5" fill="#168BFF" class="trace-node" />
+        <circle cx="1200" cy="600" r="3" fill="#00E5FF" class="trace-node" />
+      </g>
+
+      <!-- Active Cyan Traces with Glowing Nodes -->
+      <g class="circuit-active-traces" stroke="#00E5FF" stroke-width="1.5" fill="none" opacity="0.65">
+        <path class="pulse-path" d="M 0 340 L 260 340 L 320 400 L 560 400 L 640 480 L 820 480" />
+        <path class="pulse-path-reverse" d="M 1440 440 L 1200 440 L 1120 360 L 890 360" />
+        <rect x="257" y="337" width="6" height="6" fill="#00E5FF" class="ic-pad" />
+        <rect x="557" y="397" width="6" height="6" fill="#00E5FF" class="ic-pad" />
+        <circle cx="820" cy="480" r="4" fill="#00E5FF" class="pulse-node" />
+        <circle cx="890" cy="360" r="4" fill="#00E5FF" class="pulse-node" />
+      </g>
+    </svg>
+    <div class="vignette-overlay"></div>
+  </div>
+
+  <!-- FLOATING COMMAND HEADER -->
+  <header class="cmd-header" id="header">
+    <div class="header-inner">
+      <!-- Left: Identity Monogram & Title -->
+      <a href="#hero" class="brand-unit" aria-label="John Bautista Portfolio Home">
+        <div class="monogram-frame">
+          <svg class="monogram-svg" viewBox="0 0 44 44" width="44" height="44">
+            <polygon points="4,4 40,4 40,32 32,40 4,40" class="monogram-border" />
+            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" class="monogram-text">JB</text>
+            <circle cx="4" cy="4" r="2" fill="#00E5FF" />
+            <circle cx="40" cy="32" r="2" fill="#00E5FF" />
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">JOHN BAUTISTA JR.</span>
+          <span class="brand-sub">COMPUTER ENGINEERING // BORN: MARCH 24, 2004</span>
+        </div>
+      </a>
+
+      <!-- Center-Right: Navigation Links -->
+      <nav class="nav-control" aria-label="System Navigation">
+        <ul class="nav-list" id="nav-list">
+          <li class="nav-item"><a href="#hero" class="nav-link active" data-nav="hero">HOME</a></li>
+          <li class="nav-item"><a href="#about" class="nav-link" data-nav="about">ABOUT</a></li>
+          <li class="nav-item"><a href="#skills" class="nav-link" data-nav="skills">SKILLS</a></li>
+          <li class="nav-item"><a href="#projects" class="nav-link" data-nav="projects">PROJECTS</a></li>
+          <li class="nav-item"><a href="#experience" class="nav-link" data-nav="experience">EXPERIENCE</a></li>
+          <li class="nav-item"><a href="#certificates" class="nav-link" data-nav="certificates">CREDENTIALS</a></li>
+          <li class="nav-item"><a href="#contact" class="nav-link" data-nav="contact">CONTACT</a></li>
+        </ul>
+      </nav>
+
+      <!-- System Quick Status & Mobile Toggle -->
+      <div class="header-aux">
+        <div class="status-pill" title="Telemetry Feed Active">
+          <span class="status-dot"></span>
+          <span class="status-text">SYSTEM: ONLINE</span>
+        </div>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Drawer" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+    <!-- Geometric PCB Border Accent on Bottom -->
+    <div class="header-pcb-rule">
+      <div class="pcb-notch"></div>
+    </div>
+  </header>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="drawer-code">[ NAV_OVERRIDE_ACTIVE ]</span>
+      <button class="drawer-close" id="drawer-close" aria-label="Close Navigation">&times;</button>
+    </div>
+    <ul class="drawer-list">
+      <li><a href="#hero" class="drawer-link">HOME</a></li>
+      <li><a href="#about" class="drawer-link">ABOUT</a></li>
+      <li><a href="#skills" class="drawer-link">SKILLS</a></li>
+      <li><a href="#projects" class="drawer-link">PROJECTS</a></li>
+      <li><a href="#experience" class="drawer-link">EXPERIENCE</a></li>
+      <li><a href="#certificates" class="drawer-link">CREDENTIALS</a></li>
+      <li><a href="#contact" class="drawer-link">CONTACT</a></li>
+    </ul>
+    <div class="drawer-footer">
+      <span>SEC_ID: JB-ENGR-2026</span>
+    </div>
+  </div>
+
+  <main id="main-content">
+
+    <!-- ========================================================
+         SECTION 00: HERO (DIGITAL COMMAND CENTER)
+         ======================================================== -->
+    <section class="section-hero" id="hero">
+      <div class="hero-container">
+        
+        <!-- Left Column: Identity & Text Composition -->
+        <div class="hero-left">
+          <div class="hero-tag-wrap">
+            <span class="hero-marker-code">// INITIATING SYSTEM_PROFILE</span>
+            <div class="hero-tag">
+              <span class="tag-bracket">[</span>
+              <span class="tag-content">HELLO, I'M</span>
+              <span class="tag-bracket">]</span>
+            </div>
+            <div class="tag-circuit-line"></div>
+          </div>
+
+          <h1 class="hero-name" id="hero-name">
+            <span class="first-name">JOHN</span>
+            <span class="surname glitch-text" data-text="BAUTISTA">BAUTISTA</span>
+          </h1>
+
+          <div class="hero-title-box">
+            <span class="title-bracket">&lt;</span>
+            <h2 class="hero-title">COMPUTER ENGINEER</h2>
+            <span class="title-bracket">/&gt;</span>
+          </div>
+
+          <p class="hero-summary">
+            I build and troubleshoot systems, turn ideas into working solutions, and enjoy learning new technologies across embedded hardware, IoT, IT operations, and intelligent automation.
+          </p>
+
+          <!-- Core Call to Action Buttons -->
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">
+              <span class="btn-corner tl"></span>
+              <span class="btn-corner br"></span>
+              <span class="btn-text">VIEW MY PROJECTS</span>
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42L16.86 11H5v2z"/>
+                </svg>
+              </span>
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+              <span class="btn-corner tl"></span>
+              <span class="btn-corner br"></span>
+              <span class="btn-text">ESTABLISH CONTACT</span>
+            </a>
+            <a href="resume/John%20Bautista%20Jr..pdf" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" title="Download Verified PDF Resume">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+              </span>
+              <span class="btn-text">RESUME.PDF</span>
+            </a>
+          </div>
+
+          <!-- Hero Left Telemetry Bar -->
+          <div class="hero-telemetry">
+            <div class="telem-item">
+              <span class="telem-k">SPECIALIZATION:</span>
+              <span class="telem-v">EMBEDDED // IOT // IT SUPPORT</span>
+            </div>
+            <div class="telem-item">
+              <span class="telem-k">ALMA MATER:</span>
+              <span class="telem-v">CAVITE STATE UNIVERSITY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Central Holographic Core & Diagnostic Terminal -->
+        <div class="hero-right">
+          
+          <!-- HOLOGRAPHIC CORE EMBLEM -->
+          <div class="holo-stage" id="holo-stage" title="Interactive Holographic Processor Core">
+            <!-- Background Halo Glow -->
+            <div class="holo-glow"></div>
+
+            <!-- Concentric SVG Animated HUD Rings -->
+            <svg class="holo-svg" viewBox="0 0 500 500" width="100%" height="100%">
+              <defs>
+                <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Radial Circuit Feeders -->
+              <g stroke="#168BFF" stroke-width="1" opacity="0.35">
+                <line x1="250" y1="20" x2="250" y2="80" stroke-dasharray="4 4" />
+                <line x1="250" y1="420" x2="250" y2="480" stroke-dasharray="4 4" />
+                <line x1="20" y1="250" x2="80" y2="250" stroke-dasharray="4 4" />
+                <line x1="420" y1="250" x2="480" y2="250" stroke-dasharray="4 4" />
+                <line x1="88" y1="88" x2="130" y2="130" />
+                <line x1="412" y1="412" x2="370" y2="370" />
+                <line x1="88" y1="412" x2="130" y2="370" />
+                <line x1="412" y1="88" x2="370" y2="130" />
+              </g>
+
+              <!-- Layer 1: Outermost Rotating Ring with Calibration Ticks (Clockwise) -->
+              <g class="holo-ring-outer">
+                <circle cx="250" cy="250" r="225" stroke="#168BFF" stroke-width="1.2" fill="none" opacity="0.4" stroke-dasharray="14 10 30 15 80 20" />
+                <circle cx="250" cy="250" r="232" stroke="#00E5FF" stroke-width="1" fill="none" opacity="0.6" stroke-dasharray="4 12" />
+                <!-- 4 Quadrant Bracket Accents -->
+                <path d="M 230 18 L 250 18 L 270 18" stroke="#00E5FF" stroke-width="3" fill="none" />
+                <path d="M 230 482 L 250 482 L 270 482" stroke="#00E5FF" stroke-width="3" fill="none" />
+                <path d="M 18 230 L 18 250 L 18 270" stroke="#00E5FF" stroke-width="3" fill="none" />
+                <path d="M 482 230 L 482 250 L 482 270" stroke="#00E5FF" stroke-width="3" fill="none" />
+              </g>
+
+              <!-- Layer 2: Secondary Counter-Rotating Arc HUD (Counter-Clockwise) -->
+              <g class="holo-ring-mid">
+                <circle cx="250" cy="250" r="185" stroke="#00E5FF" stroke-width="2" fill="none" stroke-dasharray="90 40 180 50" filter="url(#cyanGlow)" />
+                <circle cx="250" cy="250" r="172" stroke="#168BFF" stroke-width="1" fill="none" stroke-dasharray="6 8" opacity="0.7" />
+                <!-- Orbital Nodes -->
+                <circle cx="250" cy="65" r="4" fill="#00E5FF" filter="url(#cyanGlow)" />
+                <circle cx="250" cy="435" r="3.5" fill="#168BFF" />
+                <circle cx="65" cy="250" r="3.5" fill="#168BFF" />
+                <circle cx="435" cy="250" r="4" fill="#00E5FF" filter="url(#cyanGlow)" />
+              </g>
+
+              <!-- Layer 3: Inner Concentric Pulsing Reactor Ring -->
+              <g class="holo-ring-inner">
+                <circle cx="250" cy="250" r="135" stroke="#00E5FF" stroke-width="1.5" fill="none" opacity="0.8" stroke-dasharray="40 15 20 15" />
+                <circle cx="250" cy="250" r="120" stroke="#168BFF" stroke-width="1" fill="none" opacity="0.5" stroke-dasharray="2 4" />
+                <polygon points="250,140 258,154 242,154" fill="#00E5FF" />
+                <polygon points="250,360 258,346 242,346" fill="#00E5FF" />
+                <polygon points="140,250 154,258 154,242" fill="#00E5FF" />
+                <polygon points="360,250 346,258 346,242" fill="#00E5FF" />
+              </g>
+
+              <!-- Layer 4: 3D-Like Geodesic Wireframe Sphere Lattice -->
+              <g class="holo-sphere-mesh" stroke="#168BFF" stroke-width="0.9" fill="none" opacity="0.45">
+                <!-- Latitude ellipses -->
+                <ellipse cx="250" cy="250" rx="90" ry="25" />
+                <ellipse cx="250" cy="250" rx="90" ry="55" />
+                <ellipse cx="250" cy="250" rx="90" ry="80" />
+                <!-- Longitude ellipses -->
+                <ellipse cx="250" cy="250" rx="25" ry="90" />
+                <ellipse cx="250" cy="250" rx="55" ry="90" />
+                <ellipse cx="250" cy="250" rx="80" ry="90" />
+              </g>
+
+              <!-- Center Anchor: Luminous Hexagon Housing the JB Monogram -->
+              <g class="holo-center-core">
+                <polygon points="250,185 306,218 306,282 250,315 194,282 194,218" fill="#071426" stroke="#00E5FF" stroke-width="2.5" filter="url(#cyanGlow)" />
+                <polygon points="250,195 296,222 296,278 250,305 204,278 204,222" fill="#030711" stroke="#168BFF" stroke-width="1" opacity="0.9" />
+                <text x="250" y="260" text-anchor="middle" dominant-baseline="middle" class="core-monogram">JB</text>
+              </g>
+            </svg>
+
+            <!-- Floating Core Readouts -->
+            <div class="core-tag top-tag">[ CORE_FREQ: 2.40 GHz ]</div>
+            <div class="core-tag bot-tag">[ TELEMETRY: NOMINAL ]</div>
+          </div>
+
+          <!-- DIAGNOSTIC HUD TERMINAL PANEL -->
+          <div class="terminal-panel" id="terminal-panel">
+            <div class="terminal-bar">
+              <div class="term-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="term-title">DIAG_TERMINAL // JB-ENG-OS</div>
+              <div class="term-badge">LIVE</div>
+            </div>
+            <div class="terminal-screen" id="terminal-screen" aria-live="polite">
+              <!-- Content typed via JavaScript -->
+            </div>
+            <div class="terminal-footer">
+              <span class="t-label">BUFFER: ACTIVE</span>
+              <span class="t-baud">9600 BAUD // UTF-8</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Hero Scroll Indicator -->
+      <a href="#about" class="scroll-cue" aria-label="Scroll down to About section">
+        <div class="mouse-icon">
+          <div class="mouse-wheel"></div>
+        </div>
+        <span class="cue-text">SCROLL TO EXPLORE</span>
+        <span class="cue-arrow">&#x25BC;</span>
+      </a>
+    </section>
+
+    <!-- ========================================================
+         SECTION 01: ABOUT (PROFESSIONAL PROFILE)
+         ======================================================== -->
+    <section class="section-block" id="about">
+      <div class="section-container">
+        
+        <!-- Section Header -->
+        <div class="section-header">
+          <div class="sec-meta">
+            <span class="sec-id">01 / ABOUT ME</span>
+            <span class="sec-tag">[ SYSTEM PROFILE ]</span>
+          </div>
+          <h2 class="sec-title">Passionate about technology and problem-solving.</h2>
+          <div class="sec-divider">
+            <div class="divider-node"></div>
+          </div>
+        </div>
+
+        <!-- 3-Column Technical Layout -->
+        <div class="about-grid">
+          
+          <!-- Col 1: Bio & Engineering Approach -->
+          <div class="about-card bio-col">
+            <div class="card-corner tl"></div>
+            <div class="card-corner br"></div>
+            <h3 class="about-col-title">
+              <span class="icon-inline">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+              </span>
+              ENGINEERING FOUNDATION
+            </h3>
+            <p class="about-p">
+              I am a <strong>Computer Engineering</strong> graduate from <strong>Cavite State University – Carmona Campus</strong> with a balanced curiosity spanning both physical hardware architectures and modern software solutions.
+            </p>
+            <p class="about-p">
+              Whether diagnosing PC board failures, wiring ESP32 microcontrollers to physical sensors, building full-stack kiosk interfaces, or building automated CRM pipelines, I approach every challenge with systematic troubleshooting and engineering rigour.
+            </p>
+            <p class="about-p">
+              My hands-on experience includes enterprise IT technical support and workflow automation at <strong>Moriroku Philippines</strong>, alongside developing campus-wide capstone engineering initiatives.
+            </p>
+          </div>
+
+          <!-- Col 2: Identity Profile Facts -->
+          <div class="about-card facts-col">
+            <div class="card-corner tl"></div>
+            <div class="card-corner br"></div>
+            <h3 class="about-col-title">
+              <span class="icon-inline">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                </svg>
+              </span>
+              CORE METADATA
+            </h3>
+            <ul class="meta-list">
+              <li class="meta-item">
+                <span class="m-icon">&#9881;</span>
+                <div class="m-content">
+                  <span class="m-k">DEGREE / PROGRAM</span>
+                  <span class="m-v">Bachelor of Science in Computer Engineering</span>
+                </div>
+              </li>
+              <li class="meta-item">
+                <span class="m-icon">&#127891;</span>
+                <div class="m-content">
+                  <span class="m-k">INSTITUTION</span>
+                  <span class="m-v">Cavite State University – Carmona Campus</span>
+                </div>
+              </li>
+              <li class="meta-item">
+                <span class="m-icon">&#128205;</span>
+                <div class="m-content">
+                  <span class="m-k">LOCATION BASE</span>
+                  <span class="m-v">Sta. Rosa, Laguna, Philippines</span>
+                </div>
+              </li>
+              <li class="meta-item">
+                <span class="m-icon">&#128187;</span>
+                <div class="m-content">
+                  <span class="m-k">DOMAINS</span>
+                  <span class="m-v">Embedded Systems, IoT, IT Support, Automation</span>
+                </div>
+              </li>
+              <li class="meta-item">
+                <span class="m-icon">&#9989;</span>
+                <div class="m-content">
+                  <span class="m-k">AVAILABILITY</span>
+                  <span class="m-v highlight-cyan">Open for Technical & Engineering Roles</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Technical Overview & Highlights -->
+          <div class="about-card cap-col">
+            <div class="card-corner tl"></div>
+            <div class="card-corner br"></div>
+            <h3 class="about-col-title">
+              <span class="icon-inline">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+              </span>
+              CORE METHODOLOGY
+            </h3>
+            
+            <div class="cap-unit">
+              <div class="cap-badge">SYSTEM-DIAG</div>
+              <div class="cap-text">
+                <strong>Hardware Diagnostics & Assembly</strong>
+                <span>Component-level testing, laptop/desktop maintenance, OS installation & network troubleshooting.</span>
+              </div>
+            </div>
+
+            <div class="cap-unit">
+              <div class="cap-badge">IOT-CORE</div>
+              <div class="cap-text">
+                <strong>Embedded & Sensor Integration</strong>
+                <span>Firmware development (ESP32/C++), hardware schematics, GPIO interfacing & LoRa/WiFi telemetry.</span>
+              </div>
+            </div>
+
+            <div class="cap-unit">
+              <div class="cap-badge">FLOW-OPS</div>
+              <div class="cap-text">
+                <strong>Automation & System Integration</strong>
+                <span>Streamlining operational workflows via GoHighLevel, Zapier, database records & SDLC tracking.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 02: SKILLS (TECHNICAL CAPABILITIES DASHBOARD)
+         ======================================================== -->
+    <section class="section-block" id="skills">
+      <div class="section-container">
+        
+        <div class="section-header">
+          <div class="sec-meta">
+            <span class="sec-id">02 / TECHNICAL CAPABILITIES</span>
+            <span class="sec-tag">[ SYSTEM_TOOLKIT_MATRIX ]</span>
+          </div>
+          <h2 class="sec-title">My Technical Toolkit</h2>
+          <p class="sec-desc">
+            Technologies, frameworks, and methodologies studied, practiced, and deployed across academic research, client internships, and active engineering projects.
+          </p>
+          <div class="sec-divider">
+            <div class="divider-node"></div>
+          </div>
+        </div>
+
+        <div class="skills-grid">
+          
+          <!-- Module 1: Programming & Scripting -->
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-icon-frame">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#00E5FF" stroke-width="2">
+                  <polyline points="16 18 22 12 16 6"/>
+                  <polyline points="8 6 2 12 8 18"/>
+                </svg>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-id">MODULE_01</span>
+                <h3 class="skill-title">PROGRAMMING</h3>
+              </div>
+            </div>
+            <p class="skill-summary">Core language syntax, object-oriented concepts, algorithm design, and frontend interfaces.</p>
+            <div class="skill-tags">
+              <span class="skill-pill">Java</span>
+              <span class="skill-pill">C++</span>
+              <span class="skill-pill">Python</span>
+              <span class="skill-pill">HTML5</span>
+              <span class="skill-pill">CSS3</span>
+              <span class="skill-pill">JavaScript (ES6+)</span>
+            </div>
+          </div>
+
+          <!-- Module 2: IT Support & Hardware Diagnostics -->
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-icon-frame">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#00E5FF" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-id">MODULE_02</span>
+                <h3 class="skill-title">IT SUPPORT & HARDWARE</h3>
+              </div>
+            </div>
+            <p class="skill-summary">Desktop maintenance, system configuration, OS deployment, and component diagnostics.</p>
+            <div class="skill-tags">
+              <span class="skill-pill">PC Assembly & Rig Maintenance</span>
+              <span class="skill-pill">Laptop Troubleshooting</span>
+              <span class="skill-pill">Hardware Diagnostics</span>
+              <span class="skill-pill">OS Deployment (Win/Linux)</span>
+              <span class="skill-pill">Network Setup & Cabling</span>
+              <span class="skill-pill">Microsoft 365 / Office Suite</span>
+            </div>
+          </div>
+
+          <!-- Module 3: Automation & Process Engineering -->
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-icon-frame">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#00E5FF" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                  <polyline points="2 17 12 22 22 17"/>
+                  <polyline points="2 12 12 17 22 12"/>
+                </svg>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-id">MODULE_03</span>
+                <h3 class="skill-title">AUTOMATION & DATA</h3>
+              </div>
+            </div>
+            <p class="skill-summary">Building efficient pipelines, automated communications, and process workflows.</p>
+            <div class="skill-tags">
+              <span class="skill-pill">GoHighLevel (CRM & Pipelines)</span>
+              <span class="skill-pill">Zapier Webhooks</span>
+              <span class="skill-pill">Workflow Optimization</span>
+              <span class="skill-pill">Invoice Follow-Up Automation</span>
+              <span class="skill-pill">Technical Documentation</span>
+              <span class="skill-pill">SDLC Fundamentals</span>
+            </div>
+          </div>
+
+          <!-- Module 4: Embedded Systems & IoT -->
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-icon-frame">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#00E5FF" stroke-width="2">
+                  <rect x="5" y="5" width="14" height="14" rx="2"/>
+                  <line x1="9" y1="1" x2="9" y2="5"/>
+                  <line x1="15" y1="1" x2="15" y2="5"/>
+                  <line x1="9" y1="19" x2="9" y2="23"/>
+                  <line x1="15" y1="19" x2="15" y2="23"/>
+                  <line x1="1" y1="9" x2="5" y2="9"/>
+                  <line x1="1" y1="15" x2="5" y2="15"/>
+                  <line x1="19" y1="9" x2="23" y2="9"/>
+                  <line x1="19" y1="15" x2="23" y2="15"/>
+                </svg>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-id">MODULE_04</span>
+                <h3 class="skill-title">EMBEDDED SYSTEMS & IOT</h3>
+              </div>
+            </div>
+            <p class="skill-summary">Microcontroller firmware, electronic sensor arrays, communication protocols, and circuit wiring.</p>
+            <div class="skill-tags">
+              <span class="skill-pill">ESP32 & Arduino Platforms</span>
+              <span class="skill-pill">Sensors & Microcontrollers</span>
+              <span class="skill-pill">Embedded C++</span>
+              <span class="skill-pill">IoT Hardware Prototypes</span>
+              <span class="skill-pill">LoRaWAN / Packetworx Tech</span>
+              <span class="skill-pill">Circuit Schematics & Soldering</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 03: PROJECTS (TECHNICAL CASE FILES)
+         ======================================================== -->
+    <section class="section-block" id="projects">
+      <div class="section-container">
+        
+        <div class="section-header">
+          <div class="sec-meta">
+            <span class="sec-id">03 / SELECTED PROJECTS</span>
+            <span class="sec-tag">[ CASE_ARCHIVE_SEC ]</span>
+          </div>
+          <h2 class="sec-title">Engineering in Practice</h2>
+          <p class="sec-desc">
+            Tangible demonstrations of engineering problem-solving across hardware integrations, smart devices, software development, and enterprise process automation.
+          </p>
+          <div class="sec-divider">
+            <div class="divider-node"></div>
+          </div>
+        </div>
+
+        <div class="projects-grid">
+          
+          <!-- PROJECT 01: T.A.S.K. KIOSK -->
+          <article class="project-card">
+            <div class="project-schematic-wrap">
+              <!-- Cyberpunk Schematic Illustration of Touchscreen Kiosk -->
+              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
+                <rect width="100%" height="100%" fill="#071426"/>
+                <!-- Grid background -->
+                <line x1="0" y1="60" x2="400" y2="60" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                <line x1="0" y1="120" x2="400" y2="120" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                <line x1="0" y1="180" x2="400" y2="180" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                <line x1="100" y1="0" x2="100" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                <line x1="200" y1="0" x2="200" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                <line x1="300" y1="0" x2="300" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
+                
+                <!-- Kiosk Frame Blueprint -->
+                <polygon points="150,210 250,210 235,140 165,140" fill="#030711" stroke="#00E5FF" stroke-width="1.5"/>
+                <rect x="140" y="30" width="120" height="110" rx="4" fill="#030711" stroke="#00E5FF" stroke-width="2"/>
+                <!-- Display Screen -->
+                <rect x="148" y="38" width="104" height="74" fill="#071426" stroke="#168BFF" stroke-width="1"/>
+                <text x="200" y="65" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="9" font-weight="bold">T.A.S.K. SYSTEM</text>
+                <text x="200" y="80" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">QUEUING DISP : #042</text>
+                <rect x="160" y="90" width="80" height="12" rx="2" fill="#00E5FF" fill-opacity="0.2" stroke="#00E5FF" stroke-width="0.8"/>
+                <text x="200" y="99" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="6">TOUCH TO SELECT</text>
+                
+                <!-- Kiosk Pedestal Details -->
+                <line x1="130" y1="210" x2="270" y2="210" stroke="#00E5FF" stroke-width="3"/>
+                <circle cx="160" cy="120" r="3" fill="#00E5FF"/>
+                <circle cx="240" cy="120" r="3" fill="#168BFF"/>
+                
+                <!-- Diagnostic HUD overlay notes -->
+                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> CAPSTONE PROJ</text>
+                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">STATUS: COMPLETED</text>
+              </svg>
+              <div class="project-chip">CAPSTONE // HARDWARE &amp; SOFTWARE</div>
+            </div>
+
+            <div class="project-body">
+              <div class="project-header">
+                <span class="project-num">CASE FILE 01</span>
+                <h3 class="project-title">T.A.S.K. Digital Queuing Kiosk</h3>
+              </div>
+              <p class="project-desc">
+                <strong>Transaction and Academic Services Kiosk:</strong> Designed to modernize university campus registrar queuing. Resolved congestion and wait-times through an intuitive touchscreen interface, automated ticket generation, and accessibility accommodations.
+              </p>
+              <div class="project-highlights">
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Hardware integration of display terminal, microcontroller controls &amp; thermal printer</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Designed accessible software workflow for diverse students and university staff</div>
+              </div>
+              <div class="project-tags">
+                <span class="p-tag">Embedded Systems</span>
+                <span class="p-tag">Hardware Integration</span>
+                <span class="p-tag">UI/UX Accessibility</span>
+                <span class="p-tag">C++ / Microcontroller</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 02: SMART HELMET IOT PROTOTYPE -->
+          <article class="project-card">
+            <div class="project-schematic-wrap">
+              <!-- Smart Helmet IoT Circuit Schematic -->
+              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
+                <rect width="100%" height="100%" fill="#071426"/>
+                <!-- Background Grid -->
+                <circle cx="200" cy="120" r="90" stroke="#168BFF" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.3"/>
+                
+                <!-- Helmet Contour Blueprint -->
+                <path d="M 130 145 C 130 75, 270 75, 270 145 C 270 165, 250 175, 230 175 L 170 175 C 150 175, 130 165, 130 145 Z" fill="#030711" stroke="#00E5FF" stroke-width="2"/>
+                <path d="M 160 145 C 160 120, 240 120, 240 145 Z" fill="#071426" stroke="#168BFF" stroke-width="1.2"/>
+                
+                <!-- IoT Sensors and ESP32 Nodes -->
+                <rect x="188" y="100" width="24" height="20" rx="2" fill="#00E5FF" fill-opacity="0.2" stroke="#00E5FF" stroke-width="1.2"/>
+                <text x="200" y="113" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="7">ESP32</text>
+                
+                <!-- Sensor Connection Traces -->
+                <line x1="200" y1="100" x2="200" y2="70" stroke="#00E5FF" stroke-width="1.2"/>
+                <circle cx="200" cy="68" r="4" fill="#00E5FF"/>
+                <text x="210" y="70" fill="#EAF7FF" font-family="JetBrains Mono" font-size="7">IMU / ACCEL</text>
+
+                <line x1="188" y1="110" x2="145" y2="110" stroke="#168BFF" stroke-width="1.2"/>
+                <circle cx="143" cy="110" r="3" fill="#168BFF"/>
+                <text x="95" y="112" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">WEAR SENSOR</text>
+
+                <!-- Signal Waves -->
+                <path d="M 275 130 C 285 120, 285 100, 275 90" stroke="#00E5FF" stroke-width="1.5" fill="none"/>
+                <path d="M 285 140 C 300 125, 300 95, 285 80" stroke="#168BFF" stroke-width="1.5" fill="none" opacity="0.6"/>
+                
+                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> IOT PROTOTYPE</text>
+                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">SENSORS: ACTIVE</text>
+              </svg>
+              <div class="project-chip">IOT // TELEMETRY &amp; SAFETY</div>
+            </div>
+
+            <div class="project-body">
+              <div class="project-header">
+                <span class="project-num">CASE FILE 02</span>
+                <h3 class="project-title">Smart Helmet IoT Prototype</h3>
+              </div>
+              <p class="project-desc">
+                An intelligent connected safety helmet engineered to detect compliance (proper rider wearing) and monitor sudden impact incidents in real time using sensor telemetry and an embedded ESP32 microcontroller.
+              </p>
+              <div class="project-highlights">
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Interfaced accelerometer/gyroscope sensors to register high-G impacts</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Wireless telemetry transmission for emergency notifications &amp; telemetry logging</div>
+              </div>
+              <div class="project-tags">
+                <span class="p-tag">ESP32</span>
+                <span class="p-tag">Sensor Interfacing</span>
+                <span class="p-tag">Embedded C++</span>
+                <span class="p-tag">Wireless Telemetry</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 03: CRM & WORKFLOW AUTOMATION -->
+          <article class="project-card">
+            <div class="project-schematic-wrap">
+              <!-- Automated Pipeline Diagram -->
+              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
+                <rect width="100%" height="100%" fill="#071426"/>
+                <!-- Flowchart Nodes -->
+                <rect x="30" y="95" width="85" height="50" rx="3" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
+                <text x="72" y="118" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="8">INVOICE EVENT</text>
+                <text x="72" y="132" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">TRIGGER DETECTED</text>
+
+                <!-- Connector 1 -->
+                <line x1="115" y1="120" x2="160" y2="120" stroke="#00E5FF" stroke-width="1.5"/>
+                <polygon points="160,116 168,120 160,124" fill="#00E5FF"/>
+
+                <!-- Middle Processing Node -->
+                <polygon points="210,85 260,120 210,155 160,120" fill="#030711" stroke="#00E5FF" stroke-width="1.8"/>
+                <text x="210" y="118" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="8" font-weight="bold">ZAPIER / GHL</text>
+                <text x="210" y="130" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">ROUTING RULE</text>
+
+                <!-- Connector 2 -->
+                <line x1="260" y1="120" x2="300" y2="120" stroke="#00E5FF" stroke-width="1.5"/>
+                <polygon points="300,116 308,120 300,124" fill="#00E5FF"/>
+
+                <!-- Output Action Node -->
+                <rect x="308" y="95" width="75" height="50" rx="3" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
+                <text x="345" y="118" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="8">AUTO DISPATCH</text>
+                <text x="345" y="132" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">EMAIL / SMS / DB</text>
+
+                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> ENTERPRISE AUTOMATION</text>
+                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">PIPELINE: SYNCHRONIZED</text>
+              </svg>
+              <div class="project-chip">ENTERPRISE // WORKFLOW AUTOMATION</div>
+            </div>
+
+            <div class="project-body">
+              <div class="project-header">
+                <span class="project-num">CASE FILE 03</span>
+                <h3 class="project-title">CRM &amp; Invoice Workflow Automation</h3>
+              </div>
+              <p class="project-desc">
+                Developed and supported automated client communication pipelines and invoice collection systems at <strong>Moriroku Philippines</strong>. Converted labor-intensive manual follow-ups into zero-touch automated event flows.
+              </p>
+              <div class="project-highlights">
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Structured Zapier triggers &amp; GoHighLevel pipeline stages for client accounts</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Created standardized SDLC documentation and execution guides for operational handover</div>
+              </div>
+              <div class="project-tags">
+                <span class="p-tag">GoHighLevel</span>
+                <span class="p-tag">Zapier Webhooks</span>
+                <span class="p-tag">Data Architecture</span>
+                <span class="p-tag">SDLC Documentation</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 04: HARDWARE DIAGNOSTICS & BENCHMARK SUITE -->
+          <article class="project-card">
+            <div class="project-schematic-wrap">
+              <!-- Hardware Diagnostic Bench Schematic -->
+              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
+                <rect width="100%" height="100%" fill="#071426"/>
+                <!-- Motherboard Layout -->
+                <rect x="50" y="40" width="300" height="160" rx="4" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
+                <!-- CPU Socket -->
+                <rect x="100" y="75" width="70" height="70" fill="#071426" stroke="#00E5FF" stroke-width="1.8"/>
+                <text x="135" y="112" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">CPU SOCKET</text>
+                <text x="135" y="125" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">TEST_OK</text>
+                
+                <!-- RAM Slots -->
+                <rect x="190" y="65" width="12" height="90" fill="#071426" stroke="#168BFF" stroke-width="1"/>
+                <rect x="210" y="65" width="12" height="90" fill="#071426" stroke="#168BFF" stroke-width="1"/>
+                <text x="206" y="170" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">DIMM CHANNELS</text>
+
+                <!-- PCIe Slots -->
+                <rect x="90" y="165" width="160" height="15" fill="#071426" stroke="#168BFF" stroke-width="1"/>
+                <text x="170" y="176" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="6">PCIE GEN 4.0 DIAGNOSTICS</text>
+
+                <text x="20" y="25" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> BENCH DIAGNOSTIC</text>
+                <text x="20" y="38" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">INTEGRITY: 100% PASS</text>
+              </svg>
+              <div class="project-chip">HARDWARE // SYSTEM DEPLOYMENT</div>
+            </div>
+
+            <div class="project-body">
+              <div class="project-header">
+                <span class="project-num">CASE FILE 04</span>
+                <h3 class="project-title">System Diagnostics &amp; Rig Deployments</h3>
+              </div>
+              <p class="project-desc">
+                Custom bench assembly, power rail multimeter testing, motherboard BIOS/UEFI firmware restoration, thermal profiling, and system image deployment across workstations and enterprise client machines.
+              </p>
+              <div class="project-highlights">
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Resolved POST/boot failures, RAM timing conflicts, and driver incompatibilities</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Configured partitioned multi-boot OS platforms and local network subnetworks</div>
+              </div>
+              <div class="project-tags">
+                <span class="p-tag">PC Rig Assembly</span>
+                <span class="p-tag">Motherboard Diagnostics</span>
+                <span class="p-tag">OS Provisioning</span>
+                <span class="p-tag">Thermal Profiling</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 04: EXPERIENCE (TECHNICAL TIMELINE)
+         ======================================================== -->
+    <section class="section-block" id="experience">
+      <div class="section-container">
+        
+        <div class="section-header">
+          <div class="sec-meta">
+            <span class="sec-id">04 / EXPERIENCE</span>
+            <span class="sec-tag">[ EXECUTION_TIMELINE ]</span>
+          </div>
+          <h2 class="sec-title">Where I've Applied My Skills</h2>
+          <p class="sec-desc">
+            A chronological timeline of hands-on responsibilities, enterprise internship contributions, and technical leadership.
+          </p>
+          <div class="sec-divider">
+            <div class="divider-node"></div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          
+          <!-- Timeline Entry 01: Moriroku -->
+          <div class="timeline-item">
+            <div class="timeline-marker">
+              <div class="marker-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="card-corner tl"></div>
+              <div class="card-corner br"></div>
+              <div class="t-head">
+                <div class="t-role-group">
+                  <span class="t-role">IT &amp; Systems Workflow Specialist Intern</span>
+                  <span class="t-company">MORIROKU PHILIPPINES, INC.</span>
+                </div>
+                <div class="t-period">[ INTERNSHIP // INDUSTRY EXPERIENCE ]</div>
+              </div>
+              <p class="t-summary">
+                Entrusted with supporting corporate operational technology, CRM workflows, and automation initiatives across teams.
+              </p>
+              <ul class="t-bullets">
+                <li>Configured and verified automated invoice collection and client follow-up sequences using <strong>GoHighLevel</strong> and <strong>Zapier</strong>.</li>
+                <li>Conducted IT systems support, resolving client workstation issues, account provisioning, and network connectivity problems.</li>
+                <li>Authored structured <strong>SDLC technical documentation</strong> and user-friendly procedural manuals for staff handoff.</li>
+                <li>Collaborated directly with cross-functional managers to diagnose bottlenecks and ensure timely task execution.</li>
+              </ul>
+              <div class="t-tags">
+                <span class="p-tag">GoHighLevel</span>
+                <span class="p-tag">Zapier</span>
+                <span class="p-tag">IT Operations</span>
+                <span class="p-tag">SDLC Documentation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Entry 02: University Capstone & Engineering -->
+          <div class="timeline-item">
+            <div class="timeline-marker">
+              <div class="marker-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="card-corner tl"></div>
+              <div class="card-corner br"></div>
+              <div class="t-head">
+                <div class="t-role-group">
+                  <span class="t-role">Lead Hardware Integrator &amp; Developer</span>
+                  <span class="t-company">CAVITE STATE UNIVERSITY – CARMONA CAMPUS</span>
+                </div>
+                <div class="t-period">[ ACADEMIC CAPSTONE // ENGINEERING ]</div>
+              </div>
+              <p class="t-summary">
+                Spearheaded the development and deployment of the T.A.S.K. campus queuing system and IoT prototype projects.
+              </p>
+              <ul class="t-bullets">
+                <li>Integrated physical microcontrollers, thermal receipt printers, and touchscreen interfaces into a secure metal enclosure.</li>
+                <li>Engineered firmware handling concurrent user interactions, queue serialization, and hardware interrupt routines.</li>
+                <li>Conducted rigorous fault-injection and stress testing to ensure continuous operation during peak student enrollment periods.</li>
+                <li>Presented full engineering defense and architectural documentation to faculty committee, receiving high commendation.</li>
+              </ul>
+              <div class="t-tags">
+                <span class="p-tag">Hardware Integration</span>
+                <span class="p-tag">Embedded Firmware</span>
+                <span class="p-tag">Fault Testing</span>
+                <span class="p-tag">Technical Presentation</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 05: CERTIFICATES & CREDENTIALS
+         ======================================================== -->
+    <section class="section-block" id="certificates">
+      <div class="section-container">
+        
+        <div class="section-header">
+          <div class="sec-meta">
+            <span class="sec-id">05 / VERIFIED CREDENTIALS</span>
+            <span class="sec-tag">[ CERTIFICATION_REGISTRY ]</span>
+          </div>
+          <h2 class="sec-title">Certifications &amp; Workshops</h2>
+          <p class="sec-desc">
+            Verified technical certifications in IoT networks, artificial intelligence literacy, critical thinking, and cyber defense leadership.
+          </p>
+          <div class="sec-divider">
+            <div class="divider-node"></div>
+          </div>
+        </div>
+
+        <div class="certs-grid">
+          
+          <!-- Cert 1: Packetworx Workshop 1 -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">IOT-PKX-01</span>
+              <span class="cert-type">WORKSHOP</span>
+            </div>
+            <h3 class="cert-name">Packetworx IoT Workshop 1</h3>
+            <p class="cert-issuer">Packetworx Inc. // LoRaWAN &amp; Smart Devices</p>
+            <p class="cert-detail">Hands-on IoT architecture fundamentals, sensor interfacing, and LoRaWAN gateway operations for telemetry collection.</p>
+            <a href="Certificates/BAUTISTA%20-%20Packetworx%20Workshop%201%20Certificate.pdf" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE PDF</span> &rarr;
+            </a>
+          </div>
+
+          <!-- Cert 2: Packetworx Workshop 2 -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">IOT-PKX-02</span>
+              <span class="cert-type">WORKSHOP</span>
+            </div>
+            <h3 class="cert-name">Packetworx IoT Workshop 2</h3>
+            <p class="cert-issuer">Packetworx Inc. // Advanced Telemetry</p>
+            <p class="cert-detail">Implementation of payload formatting, cloud server data routing, and IoT device node deployment.</p>
+            <a href="Certificates/BAUTISTA%20-%20Packetworx%20Workshop%202%20Certificate.pdf" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE PDF</span> &rarr;
+            </a>
+          </div>
+
+          <!-- Cert 3: Packetworx Workshop 3 -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">IOT-PKX-03</span>
+              <span class="cert-type">WORKSHOP</span>
+            </div>
+            <h3 class="cert-name">Packetworx IoT Workshop 3</h3>
+            <p class="cert-issuer">Packetworx Inc. // End-to-End Solutions</p>
+            <p class="cert-detail">End-to-end IoT platform engineering, data visualization dashboards, and edge device synchronization.</p>
+            <a href="Certificates/BAUTISTA%20-Packetworx%20Workshop%203%20Certificate.pdf" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE PDF</span> &rarr;
+            </a>
+          </div>
+
+          <!-- Cert 4: AI Literacy -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">AI-LIT-CORE</span>
+              <span class="cert-type">CREDENTIAL</span>
+            </div>
+            <h3 class="cert-name">AI Literacy Isn't Extra, It's Core</h3>
+            <p class="cert-issuer">Professional Development / AI Ethics &amp; Application</p>
+            <p class="cert-detail">Understanding foundational AI models, prompt engineering, technical integration ethics, and workflow acceleration.</p>
+            <a href="Certificates/BAUTISTA%20-%20AI%20Literacy%20Isn_t%20Extra,%20It_s%20Core.png" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE IMAGE</span> &rarr;
+            </a>
+          </div>
+
+          <!-- Cert 5: Think Like a Leader, Act Like a Defender -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">SEC-DEF-LEAD</span>
+              <span class="cert-type">SECURITY</span>
+            </div>
+            <h3 class="cert-name">Think Like a Leader, Act Like a Defender</h3>
+            <p class="cert-issuer">Cybersecurity &amp; IT Defense Seminar</p>
+            <p class="cert-detail">Security hygiene, incident response fundamentals, defensive mindset, and threat prevention in modern infrastructure.</p>
+            <a href="Certificates/BAUTISTA%20-%20Certificate%20-%20Think%20Like%20A%20Leader,%20Act%20Like%20A%20Defender.png" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE IMAGE</span> &rarr;
+            </a>
+          </div>
+
+          <!-- Cert 6: Mastering Critical Thinking in the Age of AI -->
+          <div class="cert-card">
+            <div class="cert-badge-row">
+              <span class="cert-code">CRIT-THK-AI</span>
+              <span class="cert-type">ANALYSIS</span>
+            </div>
+            <h3 class="cert-name">Mastering Critical Thinking in the Age of AI</h3>
+            <p class="cert-issuer">Analytical Reasoning &amp; System Validation</p>
+            <p class="cert-detail">Systematic verification of automated outputs, bias identification, logic deduction, and data-driven decision making.</p>
+            <a href="Certificates/BAUTISTA%20-%20Mastering%20Critical%20Thinking%20in%20the%20Age%20of%20AI%20Certificate.png" target="_blank" rel="noopener noreferrer" class="cert-link">
+              <span>VIEW CERTIFICATE IMAGE</span> &rarr;
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 06: CONTACT (FINAL CONNECTION POINT)
+         ======================================================== -->
+    <section class="section-block" id="contact">
+      <div class="section-container">
+        
+        <div class="contact-frame">
+          <div class="card-corner tl"></div>
+          <div class="card-corner br"></div>
+          <div class="contact-beacon">
+            <div class="beacon-pulse"></div>
+            <div class="beacon-core"></div>
+          </div>
+
+          <div class="contact-header">
+            <span class="sec-id">06 / ESTABLISH CONNECTION</span>
+            <h2 class="contact-title">Let's connect.</h2>
+            <p class="contact-subtitle">
+              I am actively seeking technical opportunities in Computer Engineering, Embedded Systems, IoT, IT Support, and Automation. Reach out to discuss collaboration, employment, or project inquiries.
+            </p>
+          </div>
+
+          <div class="contact-grid">
+            
+            <!-- Direct Email Communication -->
+            <div class="contact-card">
+              <div class="c-icon">&#9993;</div>
+              <div class="c-info">
+                <span class="c-label">ELECTRONIC MAIL</span>
+                <a href="mailto:johnbautistajr@gmail.com" class="c-val highlight-cyan">johnbautistajr@gmail.com</a>
+              </div>
+            </div>
+
+            <!-- Direct Telecom / Voice -->
+            <div class="contact-card">
+              <div class="c-icon">&#9742;</div>
+              <div class="c-info">
+                <span class="c-label">TELECOMMUNICATION</span>
+                <a href="tel:+639971727130" class="c-val">+63 997 172 7130</a>
+              </div>
+            </div>
+
+            <!-- Geographic Coordinates -->
+            <div class="contact-card">
+              <div class="c-icon">&#128506;</div>
+              <div class="c-info">
+                <span class="c-label">BASE LOCATION</span>
+                <span class="c-val">Sta. Rosa, Laguna, Philippines</span>
+              </div>
+            </div>
+
+            <!-- Academic Background -->
+            <div class="contact-card">
+              <div class="c-icon">&#127891;</div>
+              <div class="c-info">
+                <span class="c-label">CREDENTIALS</span>
+                <span class="c-val">B.S. in Computer Engineering</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Primary Contact Actions -->
+          <div class="contact-actions">
+            <a href="mailto:johnbautistajr@gmail.com?subject=Inquiry%20regarding%20Computer%20Engineering%20Role" class="btn btn-primary">
+              <span class="btn-corner tl"></span>
+              <span class="btn-corner br"></span>
+              <span class="btn-text">SEND DIRECT EMAIL</span>
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </span>
+            </a>
+            
+            <a href="resume/John%20Bautista%20Jr..pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <span class="btn-corner tl"></span>
+              <span class="btn-corner br"></span>
+              <span class="btn-text">VIEW FULL RESUME [PDF]</span>
+            </a>
+          </div>
+
+          <div class="contact-foot-note">
+            <span>// TRANSMISSION PROTOCOL: ENCRYPTED // READY FOR INCOMING INQUIRIES</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       FOOTER (SYSTEM IDENTIFICATION)
+       ======================================================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <div class="footer-left">
+        <div class="footer-monogram">JB</div>
+        <div class="footer-legal">
+          <span class="copy-text">&copy; 2026 JOHN BAUTISTA. ALL RIGHTS RESERVED.</span>
+          <span class="sub-text">COMPUTER ENGINEER // DIGITAL PORTFOLIO COMMAND CENTER</span>
+        </div>
+      </div>
+
+      <div class="footer-center">
+        <div class="sys-badge">
+          <span class="sys-led"></span>
+          <span>SYSTEM STATUS: ONLINE</span>
+        </div>
+      </div>
+
+      <div class="footer-right">
+        <span class="tech-stack-tag">BUILT WITH HTML5 &bull; CSS3 &bull; JAVASCRIPT &bull; SVG</span>
+        <a href="#hero" class="back-to-top" aria-label="Back to top">
+          <span>TOP</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M12 4l-8 8h5v8h6v-8h5z"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       INTERACTIVE CYBERPUNK CHIBI COMPANION (EASTER EGG)
+       ======================================================== -->
+  <div class="chibi-companion" id="chibi-companion" title="Click or Drag me! I am your AI assistant companion." aria-label="Interactive Assistant Chibi">
+    <div class="chibi-speech-bubble" id="chibi-bubble">
+      <span>Systems online! Ready to assist!</span>
+    </div>
+    <div class="chibi-character" id="chibi-char">
+      <img src="Interactive Chibi/idle.png" alt="Interactive Companion Chibi" id="chibi-img">
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
