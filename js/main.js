@@ -354,6 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
       land: 'Interactive Chibi/land.png'
     };
 
+    // Preload all sprites into memory so transitions are instant with no lag
+    Object.values(sprites).forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
     let isDragging = false;
     let isFalling = false;
     let isWalking = false;
@@ -398,8 +404,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startGravityFall = () => {
       if (animFrame) cancelAnimationFrame(animFrame);
       isFalling = true;
-      let velocityY = 2;
-      const gravity = 1.15;
+      let velocityY = 1.5;
+      const gravity = 0.95; // Smooth realistic drop
       const home = getHomePos();
       const floorY = home.y;
       let frameCounter = 0;
@@ -409,8 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentY += velocityY;
         frameCounter++;
 
-        // Alternate falling1 and falling2 every 6 animation frames (~100ms)
-        if (frameCounter % 12 < 6) {
+        // Alternate falling1 and falling2 every 8 frames (~130ms) for noticeable leg kicking
+        if (frameCounter % 16 < 8) {
           chibiImg.src = sprites.falling1;
         } else {
           chibiImg.src = sprites.falling2;
@@ -438,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         chibiChar.style.transform = 'scale(1)';
         startWalkingHome();
-      }, 450);
+      }, 550); // Give clear visibility to the landing pose
     };
 
     // Walk horizontally across floor back to home base
