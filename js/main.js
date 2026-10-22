@@ -203,25 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let termInitialized = false;
 
   function initTerminalTyping() {
+    // JB-ASSIST chatbot (chatbot.js) takes over the terminal — skip typewriter
     if (termInitialized || !terminalScreen) return;
     termInitialized = true;
-    terminalScreen.innerHTML = '';
-
-    terminalLogData.forEach((item) => {
-      setTimeout(() => {
-        const line = document.createElement('span');
-        line.className = `terminal-line ${item.type}`;
-        line.textContent = item.text;
-        terminalScreen.appendChild(line);
-      }, item.delay);
-    });
-
-    // Add trailing block cursor after all lines appear
-    setTimeout(() => {
-      const cursor = document.createElement('span');
-      cursor.className = 'term-cursor';
-      terminalScreen.appendChild(cursor);
-    }, 1800);
+    // Chatbot will handle terminal content after boot overlay is dismissed
   }
 
   // =========================================================================

@@ -1,574 +1,522 @@
 /**
- * JB-ASSIST // PORTFOLIO CHATBOT v1.0
- * Cyberpunk-themed AI assistant for John Bautista's portfolio.
- * Uses a keyword-scoring engine against a built-in knowledge base.
+ * JB-ASSIST // PORTFOLIO CHATBOT v2.0
+ * - Integrated into the hero terminal panel (replaces typewriter after boot)
+ * - Chibi speech bubble echoes bot replies
+ * - Cognitive intent engine: detects hire offers, contact extraction, greetings, etc.
  */
 
 (function () {
   'use strict';
 
   /* ===================================================================
-     KNOWLEDGE BASE — All info about John Bautista
+     INTENT PATTERNS — Checked before KB lookup
      =================================================================== */
-  const KB = [
-    // Identity
-    { tags: ['name', 'who', 'john', 'bautista', 'person', 'introduce', 'yourself'], answer: "I'm the digital assistant for <strong>John S. Bautista Jr.</strong> — a Computer Engineering graduate from Cavite State University, Carmona Campus. He specializes in Embedded Systems, IoT, IT Support, and Automation." },
-    { tags: ['age', 'born', 'birthday', 'birth', 'old'], answer: "John was born on <strong>March 24, 2004</strong>, making him 22 years old." },
-    { tags: ['location', 'where', 'based', 'live', 'address', 'place'], answer: "John is based in <strong>Sta. Rosa, Laguna, Philippines</strong>." },
-    { tags: ['email', 'contact', 'mail', 'reach', 'message', 'connect'], answer: "You can reach John via email at <strong><a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a></strong> or call <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
-    { tags: ['phone', 'number', 'call', 'telephone', 'mobile'], answer: "John's contact number is <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
-    { tags: ['gender', 'sex', 'male', 'female'], answer: "John is <strong>Male</strong>." },
-    { tags: ['availability', 'available', 'open', 'hiring', 'hire', 'job', 'opportunity', 'work', 'employ'], answer: "John is <strong>currently open for technical and engineering roles</strong> — particularly in Computer Engineering, Embedded Systems, IoT, IT Support, and Automation." },
+  const INTENTS = [
 
-    // Education
-    { tags: ['education', 'degree', 'school', 'university', 'college', 'study', 'graduate', 'academic', 'course', 'program'], answer: "John holds a <strong>Bachelor of Science in Computer Engineering</strong> from <strong>Cavite State University – Carmona Campus</strong>." },
-    { tags: ['cavite', 'csu', 'carmona', 'institution', 'alma mater'], answer: "John graduated from <strong>Cavite State University – Carmona Campus</strong> with a degree in Computer Engineering." },
+    // 🎉 HIRE / JOB OFFER — extract contact info from the message itself
+    {
+      detect: (msg, tokens) =>
+        tokens.some(t => ['hired', 'hire', 'offer', 'offered', 'position', 'opportunity', 'recruit', 'onboard', 'selected', 'congrats', 'congratulations'].includes(t)),
+      respond: (msg) => {
+        const email = extractEmail(msg);
+        const phone = extractPhone(msg);
+        if (email && phone) {
+          return `🎉 <strong>That's incredible news!</strong> John is thrilled to hear about the opportunity! He'll reach out to you promptly at <strong>${email}</strong> or <strong>${phone}</strong>. Looking forward to connecting!`;
+        } else if (email) {
+          return `🎉 <strong>Amazing!</strong> John is excited about this opportunity! He'll get in touch with you at <strong>${email}</strong> very soon. Thank you!`;
+        } else if (phone) {
+          return `🎉 <strong>Fantastic!</strong> John would love to connect! He'll reach you at <strong>${phone}</strong> shortly. Really appreciate the opportunity!`;
+        } else {
+          return `🎉 <strong>Wow, thank you!</strong> John is genuinely excited about this opportunity! Please drop your contact at <strong><a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a></strong> and he'll respond ASAP!`;
+        }
+      }
+    },
 
-    // Skills — Programming
-    { tags: ['programming', 'language', 'code', 'coding', 'software', 'java', 'python', 'javascript', 'html', 'css', 'c++', 'script'], answer: "John's programming skills include <strong>Java, C++, Python, HTML5, CSS3, and JavaScript (ES6+)</strong>. He applies these across firmware, frontend interfaces, and automation scripts." },
-    { tags: ['frontend', 'web', 'html', 'css', 'javascript', 'interface', 'ui', 'ux', 'design'], answer: "John has frontend web skills using <strong>HTML5, CSS3, and JavaScript (ES6+)</strong>, and has built touchscreen kiosk interfaces and portfolio pages." },
+    // 📬 STANDALONE contact info drop (email and/or phone, no hire keyword needed)
+    {
+      detect: (msg) => {
+        const hasEmail = !!extractEmail(msg);
+        const hasPhone = !!extractPhone(msg);
+        const lower = msg.toLowerCase();
+        // Not a question, more of a statement providing contact
+        const isStatement = lower.includes('contact') || lower.includes('reach') || lower.includes('call') || lower.includes('email') || lower.includes('message') || lower.includes('me at') || lower.includes('reach me') || lower.includes('get back');
+        return (hasEmail || hasPhone) && isStatement;
+      },
+      respond: (msg) => {
+        const email = extractEmail(msg);
+        const phone = extractPhone(msg);
+        const contactStr = [email, phone].filter(Boolean).join(' or ');
+        return `Got it! John will follow up with you at <strong>${contactStr}</strong>. He usually responds within 24 hours. You can also reach him directly at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`;
+      }
+    },
 
-    // Skills — IT Support & Hardware
-    { tags: ['it', 'support', 'hardware', 'diagnostic', 'pc', 'computer', 'laptop', 'desktop', 'troubleshoot', 'repair', 'assembly', 'rig'], answer: "John's IT support & hardware skills include <strong>PC Assembly & Rig Maintenance, Laptop Troubleshooting, Hardware Diagnostics, OS Deployment (Windows/Linux), Network Setup & Cabling, and Microsoft 365</strong>." },
-    { tags: ['os', 'windows', 'linux', 'operating system', 'install', 'deploy'], answer: "John is experienced in <strong>OS Deployment for both Windows and Linux</strong> environments, including partitioned multi-boot setups." },
-    { tags: ['network', 'networking', 'cabling', 'lan', 'wi-fi', 'wifi', 'connectivity'], answer: "John can handle <strong>Network Setup & Cabling</strong>, subnetting, and connectivity troubleshooting in enterprise environments." },
+    // 👋 GREETINGS
+    {
+      detect: (_, tokens) => tokens.some(t => ['hi', 'hello', 'hey', 'sup', 'yo', 'howdy', 'greetings', 'hiya', 'good morning', 'good afternoon', 'good evening'].includes(t)),
+      respond: () => `Hey there! 👋 I'm <strong>JB-Assist</strong>, John's portfolio bot. Ask me anything — his <strong>skills, projects, experience, education</strong>, or how to <strong>contact him</strong>. I'm online and ready!`
+    },
 
-    // Skills — Automation
-    { tags: ['automation', 'workflow', 'pipeline', 'zapier', 'gohighlevel', 'ghl', 'crm', 'invoice', 'sdlc', 'documentation', 'process'], answer: "John's automation skills cover <strong>GoHighLevel (CRM & Pipelines), Zapier Webhooks, Workflow Optimization, Invoice Follow-Up Automation, Technical Documentation, and SDLC Fundamentals</strong>." },
-    { tags: ['zapier', 'webhook', 'trigger', 'zap'], answer: "John has practical experience building <strong>Zapier webhook automations</strong>, including invoice event triggers that automatically dispatch emails, SMS, and database updates." },
-    { tags: ['gohighlevel', 'ghl', 'crm', 'pipeline', 'client', 'follow-up'], answer: "John used <strong>GoHighLevel</strong> to configure and manage CRM pipelines, automated client follow-up sequences, and invoice collection workflows during his internship at Moriroku Philippines." },
+    // 🙏 THANKS
+    {
+      detect: (_, tokens) => tokens.some(t => ['thanks', 'thank', 'thankyou', 'ty', 'thx', 'appreciate', 'appreciated', 'cheers'].includes(t)),
+      respond: () => `You're welcome! 😊 If you have any more questions about John, feel free to ask. He's <strong>open to opportunities</strong> — don't hesitate to reach out!`
+    },
 
-    // Skills — Embedded / IoT
-    { tags: ['embedded', 'iot', 'esp32', 'arduino', 'microcontroller', 'firmware', 'sensor', 'lora', 'lorawan', 'circuit', 'solder', 'hardware', 'gpio'], answer: "John is skilled in <strong>Embedded Systems & IoT</strong>: ESP32 & Arduino platforms, Sensors & Microcontrollers, Embedded C++, IoT Hardware Prototyping, LoRaWAN / Packetworx technology, and Circuit Schematics & Soldering." },
-    { tags: ['esp32', 'microcontroller', 'firmware', 'embedded c', 'c++'], answer: "John has hands-on experience with <strong>ESP32 microcontrollers</strong>, writing firmware in <strong>Embedded C++</strong> for real-time sensor interfacing, GPIO control, and wireless telemetry." },
-    { tags: ['lora', 'lorawan', 'packetworx', 'telemetry', 'wireless', 'rf', 'signal'], answer: "John is trained in <strong>LoRaWAN technology through Packetworx workshops</strong>, covering gateway operations, payload formatting, and cloud data routing." },
+    // 🤖 What is the bot / who are you
+    {
+      detect: (_, tokens) => tokens.some(t => ['bot', 'assistant', 'ai', 'chatbot', 'are you', 'who are you', 'you are'].includes(t)),
+      respond: () => `I'm <strong>JB-Assist</strong> — an AI portfolio assistant built for John Bautista's portfolio. I can answer questions about his skills, projects, education, experience, certifications, and contact info. What would you like to know?`
+    },
 
-    // Projects
-    { tags: ['project', 'work', 'build', 'built', 'create', 'made', 'developed', 'engineering'], answer: "John's major projects include: 1) <strong>T.A.S.K. Digital Queuing Kiosk</strong> (capstone), 2) <strong>Smart Helmet IoT Prototype</strong>, 3) <strong>CRM & Invoice Workflow Automation</strong> at Moriroku, and 4) <strong>System Diagnostics & Rig Deployments</strong>." },
-    { tags: ['task', 'kiosk', 'queuing', 'queue', 'registrar', 'touchscreen', 'ticket', 'capstone'], answer: "<strong>T.A.S.K.</strong> (Transaction and Academic Services Kiosk) is John's capstone project — a touchscreen queuing system for university registrar offices featuring hardware integration (display, microcontroller, thermal printer), automated ticket generation, and accessibility accommodations." },
-    { tags: ['helmet', 'smart helmet', 'safety', 'impact', 'accelerometer', 'gyroscope', 'crash', 'wear'], answer: "The <strong>Smart Helmet IoT Prototype</strong> is an intelligent safety helmet that detects proper rider compliance and monitors real-time crash impacts using an ESP32, accelerometer/gyroscope sensors, and wireless telemetry for emergency notifications." },
-    { tags: ['crm', 'moriroku', 'invoice', 'automation', 'workflow', 'pipeline', 'zapier'], answer: "John developed <strong>CRM & Invoice Workflow Automation</strong> at Moriroku Philippines using GoHighLevel and Zapier — converting manual follow-up processes into zero-touch automated event flows with email/SMS/database dispatch." },
-    { tags: ['diagnostic', 'diagnostics', 'bios', 'uefi', 'post', 'ram', 'thermal', 'benchmark', 'bench', 'motherboard'], answer: "John's <strong>System Diagnostics & Rig Deployment</strong> work includes custom PC bench assembly, BIOS/UEFI firmware restoration, power rail multimeter testing, thermal profiling, driver troubleshooting, and multi-boot OS provisioning." },
-
-    // Experience
-    { tags: ['experience', 'internship', 'intern', 'job', 'work', 'career', 'company', 'employed'], answer: "John has two key experience entries: (1) <strong>IT & Systems Workflow Specialist Intern</strong> at Moriroku Philippines — handling CRM automation, IT support & SDLC documentation; (2) <strong>Lead Hardware Integrator & Developer</strong> on the T.A.S.K. capstone at Cavite State University." },
-    { tags: ['moriroku', 'moriroku philippines', 'company', 'enterprise', 'corporate'], answer: "At <strong>Moriroku Philippines, Inc.</strong>, John served as an IT & Systems Workflow Specialist Intern. He configured automated invoice workflows with GoHighLevel & Zapier, provided IT systems support, wrote SDLC documentation, and collaborated with cross-functional managers." },
-    { tags: ['capstone', 'university', 'academic', 'lead', 'developer', 'hardware integrator', 'cavite'], answer: "As <strong>Lead Hardware Integrator & Developer</strong> at Cavite State University – Carmona Campus, John spearheaded the T.A.S.K. queuing system and IoT prototype. He integrated physical components, engineered firmware, and conducted fault/stress testing — receiving high commendation from faculty." },
-
-    // Certificates
-    { tags: ['certificate', 'certification', 'credential', 'credentials', 'workshop', 'award', 'training'], answer: "John's verified credentials include: <strong>Packetworx IoT Workshops 1, 2 & 3</strong> (LoRaWAN & Smart Devices), <strong>AI Literacy Isn't Extra, It's Core</strong>, <strong>Think Like a Leader, Act Like a Defender</strong> (Cybersecurity), and <strong>Mastering Critical Thinking in the Age of AI</strong>." },
-    { tags: ['packetworx', 'iot workshop', 'lorawan', 'smart device', 'gateway', 'payload'], answer: "John completed <strong>three Packetworx IoT Workshops</strong>: Workshop 1 (IoT architecture & LoRaWAN fundamentals), Workshop 2 (payload formatting & cloud routing), and Workshop 3 (end-to-end IoT platform engineering & data visualization)." },
-    { tags: ['ai literacy', 'artificial intelligence', 'ai', 'prompt', 'ethics', 'ml', 'machine learning'], answer: "John holds a credential in <strong>AI Literacy Isn't Extra, It's Core</strong> — covering foundational AI models, prompt engineering, technical integration ethics, and workflow acceleration." },
-    { tags: ['cybersecurity', 'security', 'defender', 'threat', 'incident', 'defense', 'leader'], answer: "John has a cybersecurity credential: <strong>Think Like a Leader, Act Like a Defender</strong> — covering security hygiene, incident response fundamentals, and defensive mindset in modern infrastructure." },
-    { tags: ['critical thinking', 'thinking', 'reasoning', 'logic', 'bias', 'data', 'decision'], answer: "John earned the <strong>Mastering Critical Thinking in the Age of AI</strong> credential, focusing on systematic verification of AI outputs, bias identification, and data-driven decision making." },
-
-    // Resume
-    { tags: ['resume', 'cv', 'download', 'pdf', 'curriculum vitae'], answer: "You can download John's resume directly from his portfolio: <a href='resume/John%20Bautista%20Jr..pdf' target='_blank' class='chat-link'>📄 Download Resume PDF</a>" },
-
-    // Website / Portfolio
-    { tags: ['website', 'portfolio', 'site', 'page', 'section', 'navigate', 'built'], answer: "This portfolio is John's <strong>Digital Command Center</strong> — a cyberpunk-themed single-page site showcasing his About, Skills, Projects, Experience, Credentials, and Contact sections. It features a circuit board background, holographic HUD elements, and an interactive chibi companion." },
-    { tags: ['chibi', 'companion', 'mascot', 'character', 'cute', 'easter egg'], answer: "The <strong>interactive chibi companion</strong> in the corner is an Easter Egg — you can click and drag it! It has idle, walk, grab, fall, and land animations." },
-
-    // Specializations
-    { tags: ['specialization', 'focus', 'domain', 'area', 'field', 'expertise', 'forte'], answer: "John's core domains are <strong>Embedded Systems, IoT, IT Support, Hardware Diagnostics, and Workflow Automation</strong>. He bridges both physical hardware engineering and software/automation solutions." },
+    // 👍 Positive feedback / compliments
+    {
+      detect: (_, tokens) => tokens.some(t => ['great', 'awesome', 'nice', 'impressive', 'amazing', 'good', 'cool', 'excellent', 'wow', 'sick', 'dope'].includes(t)),
+      respond: () => `Thank you! 💙 John puts a lot of effort into his craft. If you'd like to discuss a project or role, you can reach him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`
+    },
   ];
 
   /* ===================================================================
-     SUGGESTED QUESTIONS
+     KNOWLEDGE BASE
      =================================================================== */
+  const KB = [
+    { tags: ['name', 'who', 'john', 'bautista', 'person', 'introduce', 'yourself', 'about you'], answer: "I'm the digital assistant for <strong>John S. Bautista Jr.</strong> — a Computer Engineering graduate from Cavite State University, Carmona Campus, specializing in Embedded Systems, IoT, IT Support, and Automation." },
+    { tags: ['age', 'born', 'birthday', 'old', 'birth'], answer: "John was born on <strong>March 24, 2004</strong>, making him 22 years old." },
+    { tags: ['location', 'where', 'based', 'live', 'place', 'address', 'from'], answer: "John is based in <strong>Sta. Rosa, Laguna, Philippines</strong>." },
+    { tags: ['email', 'contact', 'reach', 'message', 'connect', 'get in touch'], answer: "You can reach John at <strong><a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a></strong> or call <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
+    { tags: ['phone', 'number', 'call', 'telephone', 'mobile'], answer: "John's contact number is <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
+    { tags: ['availability', 'available', 'open', 'hiring', 'job', 'opportunity', 'work', 'employ', 'looking'], answer: "John is <strong>currently open for technical and engineering roles</strong> — particularly in Computer Engineering, Embedded Systems, IoT, IT Support, and Automation. Reach him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>." },
+    { tags: ['education', 'degree', 'school', 'university', 'college', 'study', 'graduate', 'academic', 'course', 'program', 'student'], answer: "John holds a <strong>Bachelor of Science in Computer Engineering</strong> from <strong>Cavite State University – Carmona Campus</strong>." },
+    { tags: ['cavite', 'csu', 'carmona', 'institution', 'alma mater'], answer: "John graduated from <strong>Cavite State University – Carmona Campus</strong> with a B.S. in Computer Engineering." },
+    { tags: ['programming', 'language', 'code', 'coding', 'software', 'java', 'python', 'javascript', 'html', 'css', 'script'], answer: "John's programming stack: <strong>Java, C++, Python, HTML5, CSS3, and JavaScript (ES6+)</strong> — applied across firmware, web interfaces, and automation scripts." },
+    { tags: ['it', 'support', 'hardware', 'diagnostic', 'pc', 'computer', 'laptop', 'desktop', 'troubleshoot', 'repair', 'assembly', 'rig'], answer: "IT & hardware skills: <strong>PC Assembly, Laptop Troubleshooting, Hardware Diagnostics, OS Deployment (Win/Linux), Network Setup & Cabling, Microsoft 365</strong>." },
+    { tags: ['network', 'networking', 'cabling', 'lan', 'wifi', 'connectivity', 'subnet'], answer: "John handles <strong>Network Setup & Cabling</strong>, subnetting, and enterprise connectivity troubleshooting." },
+    { tags: ['automation', 'workflow', 'pipeline', 'zapier', 'gohighlevel', 'ghl', 'crm', 'invoice', 'sdlc', 'process'], answer: "Automation toolkit: <strong>GoHighLevel CRM, Zapier Webhooks, Workflow Optimization, Invoice Automation, SDLC Documentation</strong>." },
+    { tags: ['embedded', 'iot', 'esp32', 'arduino', 'microcontroller', 'firmware', 'sensor', 'lora', 'lorawan', 'circuit', 'gpio'], answer: "Embedded & IoT: <strong>ESP32 & Arduino, Sensors, Embedded C++, IoT Prototyping, LoRaWAN / Packetworx, Circuit Schematics & Soldering</strong>." },
+    { tags: ['skill', 'skills', 'can', 'capable', 'technical', 'tech', 'toolkit', 'know', 'specialize'], answer: "John's 4 core skill modules: <strong>① Programming</strong> (Java, C++, Python, JS), <strong>② IT & Hardware</strong>, <strong>③ Automation & Data</strong> (Zapier, GHL), and <strong>④ Embedded Systems & IoT</strong> (ESP32, LoRaWAN)." },
+    { tags: ['project', 'work', 'build', 'built', 'create', 'made', 'developed', 'engineering', 'portfolio'], answer: "Key projects: <strong>① T.A.S.K. Queuing Kiosk</strong> (capstone), <strong>② Smart Helmet IoT</strong>, <strong>③ CRM & Invoice Automation</strong> at Moriroku, <strong>④ System Diagnostics & Rig Deployments</strong>." },
+    { tags: ['task', 'kiosk', 'queuing', 'queue', 'registrar', 'touchscreen', 'ticket', 'capstone'], answer: "<strong>T.A.S.K.</strong> (Transaction and Academic Services Kiosk) — John's capstone. A university registrar touchscreen queuing system with hardware integration (microcontroller, thermal printer, display), automated ticket generation, and accessibility support." },
+    { tags: ['helmet', 'smart', 'safety', 'impact', 'accelerometer', 'gyroscope', 'crash', 'wear', 'rider'], answer: "The <strong>Smart Helmet IoT Prototype</strong> — detects crash impacts and rider compliance in real time using ESP32, accelerometer/gyroscope sensors, and wireless emergency telemetry." },
+    { tags: ['moriroku', 'company', 'enterprise', 'corporate', 'intern', 'internship'], answer: "At <strong>Moriroku Philippines, Inc.</strong>, John was an IT & Systems Workflow Specialist Intern — configuring GoHighLevel/Zapier automations, handling IT support, and authoring SDLC documentation." },
+    { tags: ['experience', 'timeline', 'career', 'history', 'role', 'job', 'worked'], answer: "Experience: <strong>① IT & Systems Workflow Specialist Intern</strong> at Moriroku Philippines (CRM automation, IT ops, SDLC docs). <strong>② Lead Hardware Integrator & Developer</strong> at CvSU – Carmona (T.A.S.K. capstone, received high faculty commendation)." },
+    { tags: ['certificate', 'certification', 'credential', 'workshop', 'award', 'training', 'verified'], answer: "John's credentials: <strong>Packetworx IoT Workshops 1–3</strong>, <strong>AI Literacy Isn't Extra It's Core</strong>, <strong>Think Like a Leader Act Like a Defender</strong> (Cybersecurity), <strong>Mastering Critical Thinking in the Age of AI</strong>." },
+    { tags: ['packetworx', 'lorawan', 'iot workshop', 'gateway', 'payload'], answer: "John completed <strong>3 Packetworx IoT Workshops</strong>: LoRaWAN basics, payload formatting & cloud routing, and end-to-end IoT platform engineering." },
+    { tags: ['resume', 'cv', 'download', 'pdf'], answer: "Download John's resume here: <a href='resume/John%20Bautista%20Jr..pdf' target='_blank' class='chat-link'>📄 Resume PDF</a>" },
+    { tags: ['website', 'portfolio', 'site', 'page', 'this', 'design'], answer: "This is John's <strong>Digital Command Center</strong> — a cyberpunk-themed portfolio featuring his background, projects, skills, experience, and credentials. Built with HTML5, CSS3 & JavaScript." },
+    { tags: ['chibi', 'companion', 'mascot', 'character', 'cute', 'drag'], answer: "The <strong>interactive chibi companion</strong> is an Easter Egg! You can click and drag it. It has idle, walk, grab, fall, and land animations. 🎮" },
+    { tags: ['specialization', 'focus', 'domain', 'area', 'field', 'expertise', 'forte', 'main'], answer: "John's core domains: <strong>Embedded Systems, IoT, IT Support, Hardware Diagnostics, and Workflow Automation</strong> — bridging physical hardware engineering with software solutions." },
+    { tags: ['ai', 'artificial intelligence', 'machine learning', 'prompt', 'ml'], answer: "John holds an <strong>AI Literacy</strong> credential and actively uses AI tools for workflow acceleration. He's also certified in Critical Thinking in the Age of AI." },
+    { tags: ['cybersecurity', 'security', 'defense', 'defender', 'threat'], answer: "John has a <strong>Cybersecurity seminar credential</strong>: 'Think Like a Leader, Act Like a Defender' — covering security hygiene, incident response, and defensive mindset." },
+  ];
+
   const SUGGESTIONS = [
     "What are John's skills?",
     "Tell me about his projects",
-    "What's his work experience?",
-    "How can I contact John?",
+    "What's his experience?",
+    "How do I contact John?",
     "What certifications does he have?",
-    "Where did he study?",
+    "Is he open to hire?",
   ];
+
+  /* ===================================================================
+     UTILITY: EXTRACT EMAIL & PHONE FROM RAW USER MESSAGE
+     =================================================================== */
+  function extractEmail(text) {
+    const m = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+    return m ? m[0] : null;
+  }
+
+  function extractPhone(text) {
+    // Matches international formats, local PH numbers, etc.
+    const m = text.match(/(?:\+?\d[\d\s\-().]{7,}\d)/);
+    return m ? m[0].trim() : null;
+  }
 
   /* ===================================================================
      QUERY ENGINE
      =================================================================== */
-  const STOP_WORDS = new Set(['the','a','an','and','or','to','of','in','on','for','with','is','are','was','what','tell','me','his','her','about','does','he','she','do','can','how','where','when','why','who','i','you','your','my','have','has','been']);
+  const STOP = new Set(['the','a','an','and','or','to','of','in','on','for','with','is','are','was','what','tell','me','his','her','about','does','he','she','do','can','how','where','when','why','who','i','you','your','my','have','has','been','its','it','this','that','those','these','at','by','please']);
 
   function tokenize(text) {
     return text.toLowerCase()
-      .replace(/[^a-z0-9\s\-\+]/g, ' ')
+      .replace(/[^a-z0-9\s\-]/g, ' ')
       .split(/\s+/)
-      .filter(w => w.length > 1 && !STOP_WORDS.has(w));
+      .filter(w => w.length > 1 && !STOP.has(w));
   }
 
-  function scoreEntry(words, entry) {
+  function scoreKB(tokens, entry) {
     let score = 0;
-    for (const w of words) {
+    for (const w of tokens) {
       for (const tag of entry.tags) {
         if (tag === w) { score += 3; break; }
-        if (tag.includes(w) || w.includes(tag)) { score += 1; break; }
+        if (tag.length > 3 && (tag.includes(w) || w.includes(tag))) { score += 1; break; }
       }
     }
     return score;
   }
 
   function query(userInput) {
-    const words = tokenize(userInput);
-    if (!words.length) return "Please ask me something about John! Try: <em>\"What are his skills?\"</em> or <em>\"How can I contact him?\"</em>";
+    const tokens = tokenize(userInput);
+
+    // 1. Try intent detection first
+    for (const intent of INTENTS) {
+      if (intent.detect(userInput, tokens)) {
+        return intent.respond(userInput, tokens);
+      }
+    }
+
+    // 2. Fall back to KB keyword scoring
+    if (!tokens.length) {
+      return "Ask me anything about John! Try: <em>\"What are his skills?\"</em> or <em>\"How do I contact him?\"</em>";
+    }
 
     const ranked = KB
-      .map(entry => ({ entry, score: scoreEntry(words, entry) }))
-      .filter(x => x.score > 0)
-      .sort((a, b) => b.score - a.score);
+      .map(e => ({ e, sc: scoreKB(tokens, e) }))
+      .filter(x => x.sc > 0)
+      .sort((a, b) => b.sc - a.sc);
 
     if (!ranked.length) {
-      return "I'm not sure about that one. Try asking about John's <strong>skills, projects, experience, education, certificates</strong>, or how to <strong>contact him</strong>.";
+      return "Hmm, I'm not sure about that. Try asking about John's <strong>skills, projects, experience, certifications</strong>, or how to <strong>contact him</strong>.";
     }
-    return ranked[0].entry.answer;
+    return ranked[0].e.answer;
   }
 
   /* ===================================================================
-     UI — Build chatbot widget
+     CHIBI SPEECH BUBBLE INTEGRATION
      =================================================================== */
-  function buildUI() {
-    // ── Styles ──────────────────────────────────────────────────────
+  let chibiBubbleTimer = null;
+
+  function showChibiReply(htmlText) {
+    const bubble = document.getElementById('chibi-bubble');
+    if (!bubble) return;
+    // Strip HTML tags for chibi bubble (keep it short & clean)
+    const plainText = htmlText.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 90);
+    bubble.innerHTML = `<span>${plainText}${plainText.length >= 90 ? '…' : ''}</span>`;
+    bubble.classList.add('visible');
+    if (chibiBubbleTimer) clearTimeout(chibiBubbleTimer);
+    chibiBubbleTimer = setTimeout(() => bubble.classList.remove('visible'), 6000);
+  }
+
+  /* ===================================================================
+     TERMINAL CHAT UI — injected into #terminal-panel
+     =================================================================== */
+  function buildTerminalChat() {
+    const panel = document.getElementById('terminal-panel');
+    const screen = document.getElementById('terminal-screen');
+    if (!panel || !screen) return;
+
+    // ── Extra styles ─────────────────────────────────────────────────
     const style = document.createElement('style');
     style.textContent = `
-      /* === JB CHATBOT WIDGET === */
-      #jb-chat-fab {
-        position: fixed;
-        bottom: 32px;
-        right: 32px;
-        z-index: 10000;
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(135deg, #071426 60%, #0a1e38);
-        border: 1.5px solid #00E5FF;
-        border-radius: 0;
-        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 20px rgba(0,229,255,0.35), 0 0 6px rgba(0,229,255,0.2);
-        transition: box-shadow 0.3s, transform 0.2s;
-        outline: none;
-      }
-      #jb-chat-fab:hover {
-        box-shadow: 0 0 30px rgba(0,229,255,0.6), 0 0 10px rgba(0,229,255,0.4);
-        transform: scale(1.06);
-      }
-      #jb-chat-fab svg { display: block; }
-      #jb-chat-fab .fab-badge {
-        position: absolute;
-        top: -5px; right: -5px;
-        width: 14px; height: 14px;
-        background: #00E5FF;
-        border-radius: 50%;
-        animation: fabPulse 1.8s infinite;
-      }
-      @keyframes fabPulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50%       { transform: scale(1.4); opacity: 0.6; }
-      }
-
-      /* === CHAT WINDOW === */
-      #jb-chat-window {
-        position: fixed;
-        bottom: 104px;
-        right: 32px;
-        z-index: 10000;
-        width: 360px;
-        max-height: 540px;
+      /* === TERMINAL CHAT MODE === */
+      .terminal-panel {
         display: flex;
         flex-direction: column;
-        background: #071426;
-        border: 1.5px solid #00E5FF;
-        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
-        box-shadow: 0 0 40px rgba(0,229,255,0.25), 0 0 12px rgba(0,229,255,0.1), inset 0 0 60px rgba(0,20,60,0.5);
-        transition: opacity 0.25s, transform 0.25s;
-        transform-origin: bottom right;
-      }
-      #jb-chat-window.hidden {
-        opacity: 0;
-        pointer-events: none;
-        transform: scale(0.92) translateY(12px);
+        overflow: hidden;
       }
 
-      /* Header */
-      #jb-chat-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 16px 10px;
-        border-bottom: 1px solid rgba(0,229,255,0.2);
-        background: rgba(0,20,50,0.6);
-        flex-shrink: 0;
-      }
-      #jb-chat-header .ch-icon {
-        width: 32px; height: 32px;
-        background: linear-gradient(135deg, #0d2a4a, #071426);
-        border: 1px solid #00E5FF;
-        display: flex; align-items: center; justify-content: center;
-        clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
-        flex-shrink: 0;
-      }
-      #jb-chat-header .ch-titles { flex: 1; min-width: 0; }
-      #jb-chat-header .ch-name {
-        font-family: 'Orbitron', monospace;
-        font-size: 10px;
-        font-weight: 700;
-        color: #00E5FF;
-        letter-spacing: 0.08em;
-        display: block;
-      }
-      #jb-chat-header .ch-sub {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 9px;
-        color: #5a8aaa;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      #jb-chat-header .ch-status-dot {
-        width: 6px; height: 6px;
-        background: #00E5FF;
-        border-radius: 50%;
-        display: inline-block;
-        animation: fabPulse 2s infinite;
-      }
-      #jb-chat-close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #5a8aaa;
-        font-size: 18px;
-        line-height: 1;
-        padding: 2px 4px;
-        border-radius: 2px;
-        transition: color 0.2s;
-        flex-shrink: 0;
-      }
-      #jb-chat-close:hover { color: #00E5FF; }
-
-      /* Messages */
-      #jb-chat-messages {
+      /* Chat log replaces the typewriter screen */
+      #terminal-screen {
         flex: 1;
         overflow-y: auto;
-        padding: 14px 14px 8px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
+        padding: 10px 12px;
         scrollbar-width: thin;
         scrollbar-color: rgba(0,229,255,0.3) transparent;
       }
-      #jb-chat-messages::-webkit-scrollbar { width: 4px; }
-      #jb-chat-messages::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 2px; }
+      #terminal-screen::-webkit-scrollbar { width: 3px; }
+      #terminal-screen::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); }
 
-      .jb-msg {
-        max-width: 88%;
+      /* Message rows */
+      .tc-msg {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 12px;
-        line-height: 1.6;
-        padding: 9px 12px;
+        font-size: 11px;
+        line-height: 1.65;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        animation: tcFadeIn 0.2s ease;
+      }
+      @keyframes tcFadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .tc-label {
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+      }
+      .tc-msg.bot .tc-label  { color: #00E5FF; }
+      .tc-msg.user .tc-label { color: #168BFF; text-align: right; }
+
+      .tc-bubble {
+        padding: 7px 10px;
+        max-width: 92%;
         word-break: break-word;
       }
-      .jb-msg.bot {
-        align-self: flex-start;
-        background: rgba(0,20,50,0.7);
-        border: 1px solid rgba(0,229,255,0.25);
+      .tc-msg.bot .tc-bubble {
+        background: rgba(0,229,255,0.06);
+        border: 1px solid rgba(0,229,255,0.2);
         color: #c8e8f8;
-        clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+        align-self: flex-start;
       }
-      .jb-msg.bot::before {
-        content: '> BOT: ';
-        color: #00E5FF;
-        font-weight: 700;
-        font-size: 10px;
-        display: block;
-        margin-bottom: 3px;
-        letter-spacing: 0.05em;
-      }
-      .jb-msg.user {
-        align-self: flex-end;
-        background: rgba(0,229,255,0.08);
-        border: 1px solid rgba(0,229,255,0.35);
+      .tc-msg.user .tc-bubble {
+        background: rgba(22,139,255,0.08);
+        border: 1px solid rgba(22,139,255,0.25);
         color: #eaf7ff;
-        clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
+        clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%, 0 7px);
+        align-self: flex-end;
         text-align: right;
       }
-      .jb-msg.user::after {
-        content: ' :YOU <';
-        color: #168BFF;
-        font-weight: 700;
-        font-size: 10px;
-        display: block;
-        margin-top: 3px;
-        letter-spacing: 0.05em;
-      }
-      .jb-msg.typing {
-        align-self: flex-start;
-        background: rgba(0,20,50,0.7);
-        border: 1px solid rgba(0,229,255,0.2);
-        color: #5a8aaa;
+      .tc-msg.system .tc-bubble {
+        color: #3a6080;
         font-style: italic;
-        clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+        font-size: 10px;
+        align-self: flex-start;
+        border: none;
+        background: none;
+        padding: 0 4px;
       }
-      .jb-msg a.chat-link {
+      .tc-msg a.chat-link {
         color: #00E5FF;
         text-decoration: underline;
       }
-      .jb-msg a.chat-link:hover { color: #fff; }
+      .tc-msg a.chat-link:hover { color: #fff; }
 
-      /* Suggestions */
-      #jb-suggestions {
-        padding: 6px 14px 8px;
+      /* Typing indicator */
+      .tc-typing {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+      }
+      .tc-typing span {
+        width: 5px; height: 5px;
+        background: #00E5FF;
+        border-radius: 50%;
+        animation: tcBounce 0.9s infinite;
+        display: inline-block;
+      }
+      .tc-typing span:nth-child(2) { animation-delay: 0.15s; }
+      .tc-typing span:nth-child(3) { animation-delay: 0.30s; }
+      @keyframes tcBounce {
+        0%, 80%, 100% { transform: scaleY(1); opacity: 0.5; }
+        40%            { transform: scaleY(1.6); opacity: 1; }
+      }
+
+      /* Suggestion chips */
+      #tc-suggestions {
+        padding: 5px 12px 4px;
         display: flex;
         flex-wrap: wrap;
-        gap: 5px;
-        border-top: 1px solid rgba(0,229,255,0.1);
+        gap: 4px;
+        border-top: 1px solid rgba(0,229,255,0.08);
         flex-shrink: 0;
       }
-      .jb-sug-label {
+      #tc-sug-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8px;
+        color: #2a4060;
+        width: 100%;
+        letter-spacing: 0.1em;
+        margin-bottom: 2px;
+      }
+      .tc-sug {
         font-family: 'JetBrains Mono', monospace;
         font-size: 9px;
-        color: #3a6080;
-        width: 100%;
-        margin-bottom: 2px;
-        letter-spacing: 0.08em;
-      }
-      .jb-sug {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        background: rgba(0,229,255,0.06);
-        border: 1px solid rgba(0,229,255,0.22);
-        color: #7ab8d4;
-        padding: 4px 8px;
+        background: rgba(0,229,255,0.04);
+        border: 1px solid rgba(0,229,255,0.18);
+        color: #6a9ab4;
+        padding: 3px 7px;
         cursor: pointer;
-        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
-        transition: background 0.2s, color 0.2s, border-color 0.2s;
-        line-height: 1.3;
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+        transition: background 0.18s, color 0.18s;
+        line-height: 1.4;
       }
-      .jb-sug:hover {
-        background: rgba(0,229,255,0.15);
+      .tc-sug:hover {
+        background: rgba(0,229,255,0.12);
         color: #00E5FF;
-        border-color: rgba(0,229,255,0.5);
+        border-color: rgba(0,229,255,0.4);
       }
 
       /* Input row */
-      #jb-chat-input-row {
+      #tc-input-row {
         display: flex;
         align-items: center;
+        padding: 6px 10px 8px;
+        border-top: 1px solid rgba(0,229,255,0.12);
+        background: rgba(0,8,24,0.5);
         gap: 0;
-        padding: 8px 12px 12px;
-        border-top: 1px solid rgba(0,229,255,0.15);
         flex-shrink: 0;
-        background: rgba(0,10,30,0.4);
       }
-      #jb-chat-input {
+      #tc-prompt-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: #00E5FF;
+        margin-right: 6px;
+        flex-shrink: 0;
+        user-select: none;
+      }
+      #tc-input {
         flex: 1;
-        background: rgba(0,20,50,0.6);
-        border: 1px solid rgba(0,229,255,0.3);
-        border-right: none;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(0,229,255,0.25);
         color: #eaf7ff;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 12px;
-        padding: 8px 12px;
+        font-size: 11px;
+        padding: 2px 4px;
         outline: none;
         transition: border-color 0.2s;
-        clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
+        min-width: 0;
       }
-      #jb-chat-input::placeholder { color: #3a6080; }
-      #jb-chat-input:focus { border-color: rgba(0,229,255,0.7); }
-      #jb-chat-send {
-        background: linear-gradient(135deg, #0d2a4a, #071426);
-        border: 1px solid rgba(0,229,255,0.4);
+      #tc-input::placeholder { color: #2a4060; }
+      #tc-input:focus { border-color: rgba(0,229,255,0.6); }
+      #tc-send {
+        background: none;
+        border: none;
         color: #00E5FF;
         cursor: pointer;
-        padding: 8px 14px;
         font-family: 'Orbitron', monospace;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 700;
-        letter-spacing: 0.05em;
-        transition: background 0.2s, box-shadow 0.2s;
-        clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
-        height: 100%;
+        padding: 2px 0 2px 10px;
+        letter-spacing: 0.06em;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        flex-shrink: 0;
         white-space: nowrap;
       }
-      #jb-chat-send:hover {
-        background: linear-gradient(135deg, #00E5FF22, #168BFF22);
-        box-shadow: 0 0 10px rgba(0,229,255,0.3);
-      }
+      #tc-send:hover { opacity: 1; }
 
-      /* Scan line animation on chat window */
-      #jb-chat-window::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(0,229,255,0.5), transparent);
-        animation: scanLine 3s linear infinite;
-        pointer-events: none;
-      }
-      @keyframes scanLine {
-        0%   { top: 0; opacity: 0.8; }
-        100% { top: 100%; opacity: 0; }
-      }
-
-      /* Mobile adjustments */
-      @media (max-width: 600px) {
-        #jb-chat-window {
-          right: 12px;
-          bottom: 90px;
-          width: calc(100vw - 24px);
-          max-width: 360px;
-        }
-        #jb-chat-fab {
-          right: 16px;
-          bottom: 20px;
-        }
-      }
+      /* Update terminal bar title */
+      .term-title { font-size: 10px; }
     `;
     document.head.appendChild(style);
 
-    // ── FAB Button ───────────────────────────────────────────────────
-    const fab = document.createElement('button');
-    fab.id = 'jb-chat-fab';
-    fab.setAttribute('aria-label', 'Open JB Portfolio Assistant');
-    fab.title = 'Ask me anything about John!';
-    fab.innerHTML = `
-      <div class="fab-badge"></div>
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#00E5FF" stroke-width="1.8">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        <line x1="9" y1="10" x2="15" y2="10" stroke-width="1.4"/>
-        <line x1="9" y1="13" x2="13" y2="13" stroke-width="1.4"/>
-      </svg>
-    `;
-    document.body.appendChild(fab);
+    // ── Clear auto-typewriter content, rebuild as chat ───────────────
+    screen.innerHTML = '';
 
-    // ── Chat Window ──────────────────────────────────────────────────
-    const win = document.createElement('div');
-    win.id = 'jb-chat-window';
-    win.className = 'hidden';
-    win.setAttribute('role', 'dialog');
-    win.setAttribute('aria-label', 'JB Portfolio Assistant');
-    win.innerHTML = `
-      <div id="jb-chat-header">
-        <div class="ch-icon">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#00E5FF" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-        </div>
-        <div class="ch-titles">
-          <span class="ch-name">JB-ASSIST // PORTFOLIO BOT</span>
-          <span class="ch-sub"><span class="ch-status-dot"></span>ONLINE &nbsp;|&nbsp; ASK ANYTHING</span>
-        </div>
-        <button id="jb-chat-close" aria-label="Close chat">&times;</button>
-      </div>
+    // ── Suggestions block ────────────────────────────────────────────
+    const sugBlock = document.createElement('div');
+    sugBlock.id = 'tc-suggestions';
+    const sugLabel = document.createElement('div');
+    sugLabel.id = 'tc-sug-label';
+    sugLabel.textContent = '// QUICK QUERIES';
+    sugBlock.appendChild(sugLabel);
 
-      <div id="jb-chat-messages" role="log" aria-live="polite"></div>
-
-      <div id="jb-suggestions">
-        <span class="jb-sug-label">// QUICK QUERIES</span>
-      </div>
-
-      <div id="jb-chat-input-row">
-        <input id="jb-chat-input" type="text" placeholder="Ask about skills, projects, experience..." autocomplete="off" maxlength="200" aria-label="Chat input">
-        <button id="jb-chat-send" aria-label="Send">SEND &rsaquo;</button>
-      </div>
-    `;
-    document.body.appendChild(win);
-
-    // ── References ───────────────────────────────────────────────────
-    const messagesEl = document.getElementById('jb-chat-messages');
-    const inputEl    = document.getElementById('jb-chat-input');
-    const sugEl      = document.getElementById('jb-suggestions');
-
-    // ── Helpers ──────────────────────────────────────────────────────
-    function addMessage(text, role) {
-      const msg = document.createElement('div');
-      msg.className = `jb-msg ${role}`;
-      msg.innerHTML = text;
-      messagesEl.appendChild(msg);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-      return msg;
-    }
-
-    function showTyping() {
-      return addMessage('Processing query...', 'typing');
-    }
-
-    function respond(userText) {
-      addMessage(userText, 'user');
-      const typingEl = showTyping();
-      // Slight delay for realism
-      setTimeout(() => {
-        typingEl.remove();
-        const answer = query(userText);
-        addMessage(answer, 'bot');
-        // Hide suggestions after first interaction
-        if (sugEl.style.display !== 'none') {
-          sugEl.style.display = 'none';
-        }
-      }, 420);
-    }
-
-    // ── Suggestions ──────────────────────────────────────────────────
     SUGGESTIONS.forEach(s => {
       const btn = document.createElement('button');
-      btn.className = 'jb-sug';
+      btn.className = 'tc-sug';
       btn.textContent = s;
       btn.addEventListener('click', () => {
-        sugEl.style.display = 'none';
-        respond(s);
+        hideSuggestions();
+        handleSend(s);
       });
-      sugEl.appendChild(btn);
+      sugBlock.appendChild(btn);
     });
+    panel.insertBefore(sugBlock, panel.querySelector('.terminal-footer'));
 
-    // ── Welcome message ──────────────────────────────────────────────
-    addMessage(
-      "Hello! I'm <strong>JB-Assist</strong>, John's portfolio AI. Ask me anything about his <strong>skills, projects, experience, education, certificates</strong>, or how to <strong>contact him</strong>. ⚡",
-      'bot'
-    );
+    // ── Input row ─────────────────────────────────────────────────────
+    const inputRow = document.createElement('div');
+    inputRow.id = 'tc-input-row';
+    inputRow.innerHTML = `
+      <span id="tc-prompt-label">&gt;_</span>
+      <input id="tc-input" type="text" placeholder="Ask about John..." autocomplete="off" maxlength="200" aria-label="Chat input">
+      <button id="tc-send" aria-label="Send">SEND ›</button>
+    `;
+    panel.insertBefore(inputRow, panel.querySelector('.terminal-footer'));
 
-    // ── Toggle open/close ─────────────────────────────────────────────
-    let isOpen = false;
-    function openChat() {
-      isOpen = true;
-      win.classList.remove('hidden');
-      fab.querySelector('.fab-badge').style.display = 'none';
-      setTimeout(() => inputEl.focus(), 50);
-    }
-    function closeChat() {
-      isOpen = false;
-      win.classList.add('hidden');
-    }
-
-    fab.addEventListener('click', () => isOpen ? closeChat() : openChat());
-    document.getElementById('jb-chat-close').addEventListener('click', closeChat);
-
-    // ── Send on Enter / button ────────────────────────────────────────
-    function handleSend() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      inputEl.value = '';
-      respond(text);
-    }
-
+    // ── Wire input ─────────────────────────────────────────────────────
+    const inputEl = document.getElementById('tc-input');
+    document.getElementById('tc-send').addEventListener('click', () => handleSend());
     inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
-    document.getElementById('jb-chat-send').addEventListener('click', handleSend);
 
-    // ── Close on Escape ──────────────────────────────────────────────
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && isOpen) closeChat();
-    });
+    // Update terminal bar label
+    const titleEl = panel.querySelector('.term-title');
+    if (titleEl) titleEl.textContent = 'JB-ASSIST // AI PORTFOLIO BOT';
+
+    // ── Boot message (replaces typewriter) ────────────────────────────
+    addSystemMsg('> Initializing JB-ASSIST v2.0...');
+    setTimeout(() => addSystemMsg('> Knowledge base loaded. Ask me anything.'), 500);
+    setTimeout(() => {
+      addBotMsg("Hey! I'm <strong>JB-Assist</strong> 👋 — John's portfolio AI. Ask me about his <strong>skills, projects, experience, certifications</strong>, or how to <strong>contact/hire him</strong>!");
+      showChibiReply("Hi! I'm JB-Assist. Ask me anything about John!");
+    }, 1000);
+
+    // ── Helpers ───────────────────────────────────────────────────────
+    function hideSuggestions() {
+      if (sugBlock.style.display !== 'none') sugBlock.style.display = 'none';
+    }
+
+    function addMsg(html, role) {
+      const wrap = document.createElement('div');
+      wrap.className = `tc-msg ${role}`;
+      if (role === 'system') {
+        wrap.innerHTML = `<div class="tc-bubble">${html}</div>`;
+      } else {
+        const label = role === 'bot' ? 'JB-ASSIST' : 'YOU';
+        wrap.innerHTML = `<div class="tc-label">${label}</div><div class="tc-bubble">${html}</div>`;
+      }
+      screen.appendChild(wrap);
+      screen.scrollTop = screen.scrollHeight;
+      return wrap;
+    }
+
+    function addBotMsg(html)    { return addMsg(html, 'bot'); }
+    function addUserMsg(text)   { return addMsg(text, 'user'); }
+    function addSystemMsg(text) { return addMsg(text, 'system'); }
+
+    function showTyping() {
+      const el = document.createElement('div');
+      el.className = 'tc-msg bot';
+      el.innerHTML = `<div class="tc-label">JB-ASSIST</div><div class="tc-bubble tc-typing"><span></span><span></span><span></span></div>`;
+      screen.appendChild(el);
+      screen.scrollTop = screen.scrollHeight;
+      return el;
+    }
+
+    function handleSend(text) {
+      const val = (text || inputEl.value).trim();
+      if (!val) return;
+      if (inputEl) inputEl.value = '';
+      hideSuggestions();
+
+      addUserMsg(val);
+      const typingEl = showTyping();
+
+      setTimeout(() => {
+        typingEl.remove();
+        const answer = query(val);
+        addBotMsg(answer);
+        showChibiReply(answer);
+      }, 450 + Math.random() * 200);
+    }
   }
 
   /* ===================================================================
-     INIT
+     INIT — wait for terminal panel to be ready
      =================================================================== */
+  // We hook AFTER main.js's boot + terminal init, so we wait for
+  // the terminal to be visible before taking over.
+  function waitAndInit() {
+    // Poll until the boot overlay is gone
+    const bootOverlay = document.getElementById('boot-overlay');
+    if (bootOverlay && !bootOverlay.classList.contains('hidden')) {
+      setTimeout(waitAndInit, 300);
+      return;
+    }
+    // Give terminal typewriter ~500ms head start then take over
+    setTimeout(buildTerminalChat, 400);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildUI);
+    document.addEventListener('DOMContentLoaded', waitAndInit);
   } else {
-    buildUI();
+    waitAndInit();
   }
 
 })();
