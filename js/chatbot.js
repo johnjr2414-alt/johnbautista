@@ -1,22 +1,22 @@
 /**
- * JB-ASSIST // PORTFOLIO CHATBOT v2.1
+ * JB-ASSIST // PORTFOLIO CHATBOT v2.2
  * - Integrated into the hero terminal panel
  * - Chibi speech bubble echoes bot replies
- * - Cognitive intent engine with context memory
- * - Tour mode, clarification, follow-up "what?" handling
+ * - Detailed, direct responses without teasers or prompting "say what?"
+ * - Handles ordinal/specific queries like "first project", "second project", etc.
  */
 
 (function () {
   'use strict';
 
   /* ===================================================================
-     CONTEXT MEMORY — tracks last topic for follow-up questions
+     CONTEXT MEMORY
      =================================================================== */
-  let lastTopic = null;   // e.g. 'projects', 'skills', 'experience', etc.
-  let lastAnswer = null;  // full HTML of last bot reply
+  let lastTopic = null;
+  let lastAnswer = null;
 
   /* ===================================================================
-     GUIDED TOUR — sections of the portfolio with anchors
+     GUIDED TOUR
      =================================================================== */
   const TOUR_STEPS = [
     { id: 'about',        label: '01 — ABOUT',       summary: 'Background, engineering foundation & core methodology.' },
@@ -30,53 +30,70 @@
   function buildTourReply() {
     lastTopic = 'tour';
     const lines = TOUR_STEPS.map(s =>
-      `<div style="margin-bottom:5px;">
+      `<div style="margin-bottom:6px;">
         <a href="#${s.id}" class="chat-link" style="font-weight:700;">${s.label}</a>
         <span style="color:#8ab8d0;font-size:10px;display:block;margin-top:1px;">${s.summary}</span>
       </div>`
     ).join('');
-    return `Here's a quick tour of John's portfolio — click any section to jump there:<br><br>${lines}`;
+    return `Here is a complete walkthrough of John's portfolio. You can click any section to jump directly to it:<br><br>${lines}`;
   }
 
   /* ===================================================================
-     DRILL-DOWN DETAIL MAP — for "tell me more" / "what?" follow-ups
+     INDIVIDUAL PROJECT DETAILS (First, Second, Third, Fourth, or by name)
      =================================================================== */
-  const DRILL_DOWN = {
-    projects: `<strong>Project details:</strong><br>
-      <strong>① T.A.S.K. Kiosk</strong> — Capstone university queuing system. ESP32 + thermal printer + touchscreen, with accessibility support.<br>
-      <strong>② Smart Helmet IoT</strong> — Crash detection & compliance monitoring via accelerometer + ESP32 + wireless telemetry.<br>
-      <strong>③ CRM Automation</strong> — GoHighLevel & Zapier pipelines for invoice follow-ups at Moriroku Philippines.<br>
-      <strong>④ Rig Diagnostics</strong> — BIOS/UEFI restoration, power rail testing, multi-boot OS provisioning.`,
+  const DETAILED_PROJECTS = {
+    task: `<strong>Project 1: T.A.S.K. Digital Queuing Kiosk (Capstone)</strong><br>
+      • <em>Overview:</em> Transaction and Academic Services Kiosk created for the university registrar to eliminate congestion.<br>
+      • <em>Hardware:</em> Microcontroller-based controller board interfaced with a high-durability touchscreen and thermal receipt printer.<br>
+      • <em>Firmware/Software:</em> Developed responsive UI with special accessibility accommodations, queue serialization, and fault recovery.`,
 
-    skills: `<strong>Skill breakdown:</strong><br>
-      <strong>① Programming</strong> — Java, C++, Python, HTML5, CSS3, JavaScript (ES6+)<br>
-      <strong>② IT & Hardware</strong> — PC assembly, laptop repair, OS deployment, network cabling, Microsoft 365<br>
-      <strong>③ Automation & Data</strong> — GoHighLevel CRM, Zapier Webhooks, SDLC documentation<br>
-      <strong>④ Embedded & IoT</strong> — ESP32, Arduino, Embedded C++, LoRaWAN, circuit schematics & soldering`,
+    helmet: `<strong>Project 2: Smart Helmet IoT Prototype</strong><br>
+      • <em>Overview:</em> An intelligent rider safety system focused on active compliance and automated crash telemetry.<br>
+      • <em>Sensors & Hardware:</em> Embedded ESP32 microcontroller with 6-axis accelerometer & gyroscope.<br>
+      • <em>Function:</em> Real-time impact detection and wireless emergency telemetry logging for incident dispatch.`,
 
-    experience: `<strong>Experience timeline:</strong><br>
-      <strong>① Moriroku Philippines Inc.</strong> — IT & Systems Workflow Specialist Intern. Configured GoHighLevel/Zapier automations, resolved workstation issues, authored SDLC docs.<br>
-      <strong>② CvSU – Carmona Campus</strong> — Lead Hardware Integrator & Developer. Built the T.A.S.K. capstone system, led firmware engineering & hardware integration, received high faculty commendation.`,
+    crm: `<strong>Project 3: CRM & Invoice Workflow Automation</strong><br>
+      • <em>Overview:</em> Enterprise operational pipeline deployed at Moriroku Philippines.<br>
+      • <em>Tech Stack:</em> GoHighLevel, Zapier webhooks, and database triggers.<br>
+      • <em>Impact:</em> Transformed manual, multi-person invoice tracking into zero-touch automated follow-up communications.`,
 
-    certificates: `<strong>Verified credentials:</strong><br>
-      <strong>① Packetworx IoT Workshop 1</strong> — LoRaWAN & gateway fundamentals<br>
-      <strong>② Packetworx IoT Workshop 2</strong> — Payload formatting & cloud routing<br>
-      <strong>③ Packetworx IoT Workshop 3</strong> — End-to-end IoT platform & dashboards<br>
-      <strong>④ AI Literacy Isn't Extra, It's Core</strong> — Prompt engineering & AI ethics<br>
-      <strong>⑤ Think Like a Leader, Act Like a Defender</strong> — Cybersecurity seminar<br>
-      <strong>⑥ Mastering Critical Thinking in the Age of AI</strong>`,
-
-    education: `John holds a <strong>Bachelor of Science in Computer Engineering</strong> from <strong>Cavite State University – Carmona Campus</strong>. He graduated with hands-on experience in hardware systems, firmware, IoT, and enterprise automation.`,
-
-    contact: `Contact John directly:<br>
-      📧 <a href="mailto:johnbautista1424@gmail.com" class="chat-link">johnbautista1424@gmail.com</a><br>
-      📞 <a href="tel:+63971727130" class="chat-link">+63971727130</a><br>
-      📍 Sta. Rosa, Laguna, Philippines<br>
-      📄 <a href="resume/John%20Bautista%20Jr..pdf" target="_blank" class="chat-link">Download Resume PDF</a>`,
+    rigs: `<strong>Project 4: System Diagnostics & Rig Deployments</strong><br>
+      • <em>Overview:</em> Component-level diagnostics, bench assembly, and OS provisioning.<br>
+      • <em>Execution:</em> BIOS/UEFI firmware recovery, motherboard power rail multimeter testing, thermal profiling, and partitioned multi-boot deployments.`
   };
 
+  const FULL_PROJECTS_LIST = `<strong>John's Engineering Projects:</strong><br><br>
+    <strong>1. T.A.S.K. Digital Queuing Kiosk (Capstone)</strong><br>
+    Touchscreen campus queuing system integrating microcontroller hardware, thermal printer, and accessibility features.<br><br>
+    <strong>2. Smart Helmet IoT Prototype</strong><br>
+    ESP32-powered rider helmet detecting proper wear and real-time crash impacts with emergency telemetry.<br><br>
+    <strong>3. CRM & Invoice Workflow Automation (Moriroku)</strong><br>
+    Automated zero-touch client follow-ups and invoicing using GoHighLevel and Zapier webhooks.<br><br>
+    <strong>4. System Diagnostics & Rig Deployments</strong><br>
+    Component-level PC diagnostics, motherboard BIOS recovery, thermal profiling, and OS provisioning.`;
+
+  const FULL_SKILLS_LIST = `<strong>John's Technical Capabilities:</strong><br><br>
+    • <strong>Programming & Scripting:</strong> Java, C++, Python, HTML5, CSS3, JavaScript (ES6+)<br>
+    • <strong>IT Support & Hardware:</strong> PC assembly, laptop repair, hardware diagnostics, OS deployment (Windows & Linux), network setup & cabling, Microsoft 365<br>
+    • <strong>Automation & Systems:</strong> GoHighLevel CRM, Zapier webhooks, automated invoice follow-ups, SDLC documentation<br>
+    • <strong>Embedded Systems & IoT:</strong> ESP32 & Arduino platforms, embedded C++, LoRaWAN/Packetworx, sensor wiring, circuit schematics & soldering`;
+
+  const FULL_EXPERIENCE_LIST = `<strong>Professional & Engineering Experience:</strong><br><br>
+    • <strong>Moriroku Philippines, Inc.</strong> — <em>IT & Systems Workflow Specialist Intern</em><br>
+    Configured automated invoice and client communication sequences using GoHighLevel and Zapier, resolved IT workstation/network incidents, and authored SDLC procedural documentation.<br><br>
+    • <strong>Cavite State University – Carmona</strong> — <em>Lead Hardware Integrator & Developer</em><br>
+    Spearheaded the T.A.S.K. queuing kiosk and IoT prototypes, built custom firmware, conducted stress testing, and presented an engineering defense that earned high commendation.`;
+
+  const FULL_CERTS_LIST = `<strong>Verified Credentials & Workshops:</strong><br><br>
+    • <strong>Packetworx IoT Workshop 1:</strong> LoRaWAN architecture & sensor interfacing<br>
+    • <strong>Packetworx IoT Workshop 2:</strong> Payload formatting & cloud server routing<br>
+    • <strong>Packetworx IoT Workshop 3:</strong> End-to-end IoT platform engineering & telemetry dashboards<br>
+    • <strong>AI Literacy Isn't Extra, It's Core:</strong> Prompt engineering, model fundamentals, and ethics<br>
+    • <strong>Think Like a Leader, Act Like a Defender:</strong> Cybersecurity incident response & defense<br>
+    • <strong>Mastering Critical Thinking in the Age of AI:</strong> Analytical validation and bias identification`;
+
   /* ===================================================================
-     UTILITY: EXTRACT EMAIL & PHONE FROM RAW USER MESSAGE
+     UTILITY FUNCTIONS
      =================================================================== */
   function extractEmail(text) {
     const m = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
@@ -93,9 +110,9 @@
      =================================================================== */
   const INTENTS = [
 
-    // 🗺️ TOUR / WALKTHROUGH — "walk me through", "show me", "guide me", "tour"
+    // 🗺️ TOUR / WALKTHROUGH
     {
-      detect: (msg, tokens) => {
+      detect: (msg) => {
         const lower = msg.toLowerCase();
         return (
           lower.includes('walk') ||
@@ -111,51 +128,76 @@
       respond: () => buildTourReply()
     },
 
-    // ❓ VAGUE FOLLOW-UP — "what?", "huh?", "explain", "elaborate", "more", "tell me more"
+    // 🎯 SPECIFIC PROJECT BY NUMBER OR NAME (e.g. "tell me about this first project", "project 2")
     {
-      detect: (msg, tokens) => {
-        const lower = msg.toLowerCase().trim();
-        const vague = ['what', 'what?', 'huh', 'huh?', 'explain', 'elaborate', 'more', 'tell me more', 'details', 'detail', 'meaning', 'means', '?', 'continue', 'go on', 'and?', 'so?'];
-        return vague.some(v => lower === v || lower === v + '?') || (tokens.length <= 2 && tokens.some(t => ['what', 'huh', 'explain', 'more', 'elaborate', 'detail', 'details', 'continue'].includes(t)));
+      detect: (msg) => {
+        const lower = msg.toLowerCase();
+        return (
+          lower.includes('first project') ||
+          lower.includes('1st project') ||
+          lower.includes('project 1') ||
+          lower.includes('task kiosk') ||
+          lower.includes('kiosk') ||
+          lower.includes('second project') ||
+          lower.includes('2nd project') ||
+          lower.includes('project 2') ||
+          lower.includes('smart helmet') ||
+          lower.includes('helmet') ||
+          lower.includes('third project') ||
+          lower.includes('3rd project') ||
+          lower.includes('project 3') ||
+          lower.includes('fourth project') ||
+          lower.includes('4th project') ||
+          lower.includes('project 4') ||
+          lower.includes('moriroku')
+        );
       },
-      respond: () => {
-        if (lastTopic && DRILL_DOWN[lastTopic]) {
-          return DRILL_DOWN[lastTopic];
+      respond: (msg) => {
+        lastTopic = 'projects';
+        const lower = msg.toLowerCase();
+        if (lower.includes('first') || lower.includes('1st') || lower.includes('project 1') || lower.includes('task') || lower.includes('kiosk')) {
+          return DETAILED_PROJECTS.task;
         }
-        if (lastTopic === 'tour') {
-          return `Click on any section link above to jump there! You can also ask me about a specific section — like <em>"Tell me about his projects"</em> or <em>"What are his skills?"</em>`;
+        if (lower.includes('second') || lower.includes('2nd') || lower.includes('project 2') || lower.includes('helmet')) {
+          return DETAILED_PROJECTS.helmet;
         }
-        return `Could you clarify what you'd like to know? I can cover John's <strong>skills, projects, experience, education, certifications</strong>, or how to <strong>contact or hire him</strong>. You can also say <em>"walk me through the portfolio"</em> for a full tour!`;
+        if (lower.includes('third') || lower.includes('3rd') || lower.includes('project 3') || lower.includes('crm') || lower.includes('moriroku')) {
+          return DETAILED_PROJECTS.crm;
+        }
+        if (lower.includes('fourth') || lower.includes('4th') || lower.includes('project 4') || lower.includes('rig') || lower.includes('diagnostic')) {
+          return DETAILED_PROJECTS.rigs;
+        }
+        return DETAILED_PROJECTS.task;
       }
     },
 
     // 🎉 HIRE / JOB OFFER
     {
       detect: (msg, tokens) =>
-        tokens.some(t => ['hired', 'hire', 'offer', 'offered', 'position', 'recruit', 'onboard', 'selected', 'congrats', 'congratulations', 'welcome', 'onboarded'].includes(t)),
+        tokens.some(t => ['hired', 'hire', 'offer', 'offered', 'position', 'recruit', 'onboard', 'selected', 'congrats', 'congratulations', 'welcome'].includes(t)),
       respond: (msg) => {
         lastTopic = 'hire';
         const email = extractEmail(msg);
         const phone = extractPhone(msg);
         if (email && phone) {
-          return `🎉 <strong>That's incredible news!</strong> John is thrilled! He'll reach out to you at <strong>${email}</strong> or <strong>${phone}</strong> right away. Looking forward to connecting!`;
+          return `🎉 <strong>That's fantastic news!</strong> John will immediately reach out to you at <strong>${email}</strong> or <strong>${phone}</strong>. Looking forward to speaking!`;
         } else if (email) {
-          return `🎉 <strong>Amazing!</strong> John is excited about this opportunity! He'll get in touch at <strong>${email}</strong> very soon. Thank you so much!`;
+          return `🎉 <strong>Amazing!</strong> John is thrilled about the opportunity and will contact you directly at <strong>${email}</strong> very soon. Thank you!`;
         } else if (phone) {
-          return `🎉 <strong>Fantastic!</strong> John would love to connect! He'll reach you at <strong>${phone}</strong> shortly. Really appreciate it!`;
+          return `🎉 <strong>Wonderful!</strong> John will contact you at <strong>${phone}</strong> shortly. Thank you for connecting!`;
         } else {
-          return `🎉 <strong>Wow, thank you!</strong> John is genuinely excited! Please share your contact info and he'll respond ASAP at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`;
+          return `🎉 <strong>Thank you!</strong> John is open for technical opportunities. You can email him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a> or call <a href='tel:+63971727130' class='chat-link'>+63971727130</a>.`;
         }
       }
     },
 
-    // 📬 STANDALONE CONTACT DROP (phone/email in message + context)
+    // 📬 STANDALONE CONTACT DROP
     {
       detect: (msg) => {
         const hasEmail = !!extractEmail(msg);
         const hasPhone = !!extractPhone(msg);
         const lower = msg.toLowerCase();
-        const isStatement = lower.includes('contact') || lower.includes('reach') || lower.includes('call') || lower.includes('email') || lower.includes('me at') || lower.includes('reach me') || lower.includes('get back') || lower.includes('here');
+        const isStatement = lower.includes('contact') || lower.includes('reach') || lower.includes('call') || lower.includes('email') || lower.includes('me at') || lower.includes('reach me') || lower.includes('here');
         return (hasEmail || hasPhone) && isStatement;
       },
       respond: (msg) => {
@@ -163,23 +205,20 @@
         const email = extractEmail(msg);
         const phone = extractPhone(msg);
         const contactStr = [email, phone].filter(Boolean).join(' or ');
-        return `Got it! John will follow up with you at <strong>${contactStr}</strong>. He usually responds within 24 hours. You can also reach him directly at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`;
+        return `Got it! John will follow up with you at <strong>${contactStr}</strong>. You can also reach him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`;
       }
     },
 
     // 👋 GREETINGS
     {
       detect: (_, tokens) => tokens.some(t => ['hi', 'hello', 'hey', 'sup', 'yo', 'howdy', 'greetings', 'hiya'].includes(t)),
-      respond: () => {
-        lastTopic = null;
-        return `Hey there! 👋 I'm <strong>JB-Assist</strong>, John's portfolio bot. You can ask me about his <strong>skills, projects, experience, education</strong>, how to <strong>contact or hire him</strong>, or say <em>"walk me through the portfolio"</em> for a full tour!`;
-      }
+      respond: () => `Hey there! 👋 I'm <strong>JB-Assist</strong>, John's portfolio AI. Ask me directly about his <strong>skills, projects, experience, education, certificates</strong>, or how to <strong>contact/hire him</strong>!`
     },
 
     // 🙏 THANKS
     {
       detect: (_, tokens) => tokens.some(t => ['thanks', 'thank', 'thankyou', 'ty', 'thx', 'appreciate', 'cheers'].includes(t)),
-      respond: () => `You're welcome! 😊 Feel free to ask anything else about John. He's <strong>open to new opportunities</strong> — don't hesitate to reach out!`
+      respond: () => `You're very welcome! If you'd like to get in touch with John, he's available at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`
     },
 
     // 🤖 WHO IS THE BOT
@@ -188,55 +227,109 @@
         const lower = msg.toLowerCase();
         return lower.includes('who are you') || lower.includes('what are you') || (tokens.includes('bot') && tokens.length <= 4) || lower === 'ai';
       },
-      respond: () => `I'm <strong>JB-Assist</strong> — an AI portfolio assistant for John Bautista. I can answer questions about his skills, projects, education, experience, certifications, and contact info. Try asking me something!`
+      respond: () => `I'm <strong>JB-Assist</strong> — an AI portfolio assistant for John Bautista. I can give you thorough details on his projects, skills, education, experience, and contact info.`
     },
 
     // 👍 COMPLIMENTS
     {
-      detect: (_, tokens) => tokens.some(t => ['great', 'awesome', 'nice', 'impressive', 'amazing', 'cool', 'excellent', 'wow', 'dope', 'sick'].includes(t)),
-      respond: () => `Thank you! 💙 John puts a lot of effort into his craft. If you'd like to discuss a role or project, reach him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`
+      detect: (_, tokens) => tokens.some(t => ['great', 'awesome', 'nice', 'impressive', 'amazing', 'cool', 'excellent', 'wow'].includes(t)),
+      respond: () => `Thank you! John takes great pride in engineering solid solutions. You can reach him directly at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`
     },
   ];
 
   /* ===================================================================
-     KNOWLEDGE BASE
+     KNOWLEDGE BASE (DIRECT & DETAILED BY DEFAULT)
      =================================================================== */
   const KB = [
-    { topic: 'identity',      tags: ['name', 'who', 'john', 'bautista', 'person', 'introduce', 'yourself', 'about you'],            answer: "I'm the digital assistant for <strong>John S. Bautista Jr.</strong> — a Computer Engineering graduate from Cavite State University – Carmona Campus, specializing in Embedded Systems, IoT, IT Support, and Automation." },
-    { topic: 'identity',      tags: ['age', 'born', 'birthday', 'old', 'birth'],                                                     answer: "John was born on <strong>March 24, 2004</strong>, making him 22 years old." },
-    { topic: 'contact',       tags: ['location', 'where', 'based', 'live', 'place', 'address', 'from'],                             answer: "John is based in <strong>Sta. Rosa, Laguna, Philippines</strong>." },
-    { topic: 'contact',       tags: ['email', 'contact', 'reach', 'message', 'connect', 'touch'],                                   answer: "You can reach John at <strong><a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a></strong> or call <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
-    { topic: 'contact',       tags: ['phone', 'number', 'call', 'telephone', 'mobile'],                                             answer: "John's contact number is <strong><a href='tel:+63971727130' class='chat-link'>+63971727130</a></strong>." },
-    { topic: 'contact',       tags: ['availability', 'available', 'open', 'hiring', 'job', 'opportunity', 'work', 'employ', 'looking', 'hire'], answer: "John is <strong>currently open for technical and engineering roles</strong> — Embedded Systems, IoT, IT Support, and Automation. Reach him at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>." },
-    { topic: 'education',     tags: ['education', 'degree', 'school', 'university', 'college', 'study', 'graduate', 'academic', 'course', 'program', 'student'], answer: "John holds a <strong>Bachelor of Science in Computer Engineering</strong> from <strong>Cavite State University – Carmona Campus</strong>." },
-    { topic: 'education',     tags: ['cavite', 'csu', 'carmona', 'institution', 'alma mater'],                                      answer: "John graduated from <strong>Cavite State University – Carmona Campus</strong> with a B.S. in Computer Engineering." },
-    { topic: 'skills',        tags: ['programming', 'language', 'code', 'coding', 'software', 'java', 'python', 'javascript', 'html', 'css', 'script'], answer: "Programming stack: <strong>Java, C++, Python, HTML5, CSS3, and JavaScript (ES6+)</strong>." },
-    { topic: 'skills',        tags: ['it', 'support', 'hardware', 'diagnostic', 'pc', 'computer', 'laptop', 'desktop', 'troubleshoot', 'repair', 'assembly'], answer: "IT & hardware: <strong>PC Assembly, Laptop Troubleshooting, Hardware Diagnostics, OS Deployment (Win/Linux), Network Setup, Microsoft 365</strong>." },
-    { topic: 'skills',        tags: ['network', 'networking', 'cabling', 'lan', 'wifi', 'connectivity', 'subnet'],                  answer: "John handles <strong>Network Setup & Cabling</strong>, subnetting, and enterprise connectivity troubleshooting." },
-    { topic: 'skills',        tags: ['automation', 'workflow', 'pipeline', 'zapier', 'gohighlevel', 'ghl', 'crm', 'invoice', 'sdlc', 'process'], answer: "Automation toolkit: <strong>GoHighLevel CRM, Zapier Webhooks, Workflow Optimization, Invoice Automation, SDLC Documentation</strong>." },
-    { topic: 'skills',        tags: ['embedded', 'iot', 'esp32', 'arduino', 'microcontroller', 'firmware', 'sensor', 'lora', 'lorawan', 'circuit', 'gpio'], answer: "Embedded & IoT: <strong>ESP32 & Arduino, Sensors, Embedded C++, IoT Prototyping, LoRaWAN / Packetworx, Circuit Schematics & Soldering</strong>." },
-    { topic: 'skills',        tags: ['skill', 'skills', 'capable', 'technical', 'tech', 'toolkit', 'know', 'specialize', 'can'],   answer: "John's 4 core modules: <strong>① Programming</strong> (Java, C++, Python, JS), <strong>② IT & Hardware</strong>, <strong>③ Automation & Data</strong>, <strong>④ Embedded & IoT</strong>. Say <em>\"what?\"</em> for a full breakdown!" },
-    { topic: 'projects',      tags: ['project', 'work', 'build', 'built', 'create', 'made', 'developed', 'engineering', 'portfolio'], answer: "Key projects: <strong>① T.A.S.K. Queuing Kiosk</strong>, <strong>② Smart Helmet IoT</strong>, <strong>③ CRM & Invoice Automation</strong> at Moriroku, <strong>④ System Diagnostics & Rig Deployments</strong>. Say <em>\"what?\"</em> for details!" },
-    { topic: 'projects',      tags: ['task', 'kiosk', 'queuing', 'queue', 'registrar', 'touchscreen', 'ticket', 'capstone'],       answer: "<strong>T.A.S.K.</strong> (Transaction and Academic Services Kiosk) — John's capstone. A university registrar touchscreen queuing system with hardware integration (microcontroller, thermal printer), automated ticket generation, and accessibility support." },
-    { topic: 'projects',      tags: ['helmet', 'smart', 'safety', 'impact', 'accelerometer', 'gyroscope', 'crash', 'rider'],       answer: "<strong>Smart Helmet IoT Prototype</strong> — detects crash impacts & rider compliance using ESP32, accelerometer/gyroscope sensors, and wireless emergency telemetry." },
-    { topic: 'experience',    tags: ['moriroku', 'company', 'enterprise', 'corporate', 'intern', 'internship'],                     answer: "At <strong>Moriroku Philippines, Inc.</strong> — IT & Systems Workflow Specialist Intern. Configured GoHighLevel/Zapier automations, handled IT support, authored SDLC documentation." },
-    { topic: 'experience',    tags: ['experience', 'timeline', 'career', 'history', 'role', 'job', 'worked'],                      answer: "<strong>① IT & Systems Workflow Specialist Intern</strong> — Moriroku Philippines. <strong>② Lead Hardware Integrator & Developer</strong> — CvSU Carmona Capstone (high faculty commendation). Say <em>\"what?\"</em> for details!" },
-    { topic: 'certificates',  tags: ['certificate', 'certification', 'credential', 'workshop', 'award', 'training', 'verified'],   answer: "Credentials: <strong>Packetworx IoT Workshops 1–3</strong>, <strong>AI Literacy</strong>, <strong>Cybersecurity Defender</strong>, <strong>Critical Thinking in the Age of AI</strong>. Say <em>\"what?\"</em> for full list!" },
-    { topic: 'certificates',  tags: ['packetworx', 'lorawan', 'iot workshop', 'gateway', 'payload'],                               answer: "Completed <strong>3 Packetworx IoT Workshops</strong>: LoRaWAN basics, payload formatting & cloud routing, and end-to-end IoT platform engineering." },
-    { topic: 'identity',      tags: ['resume', 'cv', 'download', 'pdf'],                                                            answer: "📄 <a href='resume/John%20Bautista%20Jr..pdf' target='_blank' class='chat-link'>Download John's Resume PDF</a>" },
-    { topic: 'identity',      tags: ['website', 'portfolio', 'site', 'page', 'this', 'design'],                                    answer: "This is John's <strong>Digital Command Center</strong> — a cyberpunk-themed portfolio. Say <em>\"walk me through the portfolio\"</em> and I'll give you a guided tour!" },
-    { topic: 'identity',      tags: ['chibi', 'companion', 'mascot', 'character', 'cute', 'drag'],                                 answer: "The <strong>chibi companion</strong> is an Easter Egg! Click and drag it — it has idle, walk, grab, fall, and land animations. 🎮" },
-    { topic: 'skills',        tags: ['specialization', 'focus', 'domain', 'area', 'field', 'expertise', 'forte', 'main'],          answer: "Core domains: <strong>Embedded Systems, IoT, IT Support, Hardware Diagnostics, and Workflow Automation</strong>." },
-    { topic: 'certificates',  tags: ['ai literacy', 'artificial intelligence', 'prompt', 'ml', 'machine learning'],                answer: "John holds an <strong>AI Literacy</strong> credential covering foundational AI, prompt engineering, and workflow acceleration. He's also certified in Critical Thinking in the Age of AI." },
-    { topic: 'certificates',  tags: ['cybersecurity', 'security', 'defense', 'defender', 'threat'],                               answer: "<strong>\"Think Like a Leader, Act Like a Defender\"</strong> — John's cybersecurity credential covering incident response, security hygiene, and defensive mindset." },
+    // PROJECTS (Directly provides the full detailed overview)
+    {
+      topic: 'projects',
+      tags: ['project', 'projects', 'work', 'build', 'built', 'create', 'made', 'developed', 'engineering', 'portfolio'],
+      answer: FULL_PROJECTS_LIST
+    },
+
+    // SKILLS (Directly provides the comprehensive technical breakdown)
+    {
+      topic: 'skills',
+      tags: ['skill', 'skills', 'capable', 'technical', 'tech', 'toolkit', 'know', 'specialize', 'can', 'stack', 'abilities'],
+      answer: FULL_SKILLS_LIST
+    },
+    {
+      topic: 'skills',
+      tags: ['programming', 'language', 'languages', 'code', 'coding', 'software', 'java', 'python', 'javascript', 'html', 'css', 'script', 'c++'],
+      answer: "John's core programming stack includes <strong>Java, C++, Python, HTML5, CSS3, and modern JavaScript (ES6+)</strong>, applied across microcontroller firmware, UI development, and data automation scripts."
+    },
+    {
+      topic: 'skills',
+      tags: ['it', 'support', 'hardware', 'diagnostic', 'diagnostics', 'pc', 'computer', 'laptop', 'desktop', 'troubleshoot', 'troubleshooting', 'repair', 'assembly'],
+      answer: "John is experienced in <strong>PC assembly, laptop repairs, component multimeter diagnostics, Windows/Linux OS deployment, structured network cabling</strong>, and Microsoft 365 administration."
+    },
+    {
+      topic: 'skills',
+      tags: ['automation', 'workflow', 'pipeline', 'pipelines', 'zapier', 'gohighlevel', 'ghl', 'crm', 'invoice', 'sdlc', 'process'],
+      answer: "John specializes in <strong>GoHighLevel CRM pipelines and Zapier webhooks</strong> for automating customer follow-ups and billing, alongside comprehensive SDLC procedural documentation."
+    },
+    {
+      topic: 'skills',
+      tags: ['embedded', 'iot', 'esp32', 'arduino', 'microcontroller', 'microcontrollers', 'firmware', 'sensor', 'sensors', 'lora', 'lorawan', 'circuit', 'circuits', 'gpio'],
+      answer: "John's embedded experience covers <strong>ESP32 & Arduino platforms, embedded C++, sensor bus integration (I2C/SPI), LoRaWAN telemetry with Packetworx</strong>, and schematic design/soldering."
+    },
+
+    // EXPERIENCE
+    {
+      topic: 'experience',
+      tags: ['experience', 'timeline', 'career', 'history', 'role', 'job', 'worked', 'company', 'companies', 'intern', 'internship', 'moriroku'],
+      answer: FULL_EXPERIENCE_LIST
+    },
+
+    // CREDENTIALS / CERTIFICATES
+    {
+      topic: 'certificates',
+      tags: ['certificate', 'certificates', 'certification', 'certifications', 'credential', 'credentials', 'workshop', 'workshops', 'award', 'training', 'verified'],
+      answer: FULL_CERTS_LIST
+    },
+
+    // IDENTITY & BIOGRAPHY
+    {
+      topic: 'identity',
+      tags: ['name', 'who', 'john', 'bautista', 'person', 'introduce', 'yourself', 'about', 'bio'],
+      answer: "<strong>John S. Bautista Jr.</strong> is a Computer Engineering graduate from <strong>Cavite State University – Carmona Campus</strong> (born March 24, 2004). He specializes in embedded systems, IoT architecture, IT support, and automated CRM workflows."
+    },
+    {
+      topic: 'education',
+      tags: ['education', 'degree', 'school', 'university', 'college', 'study', 'graduate', 'academic', 'course', 'program', 'csu', 'cavite', 'carmona'],
+      answer: "John completed his <strong>Bachelor of Science in Computer Engineering</strong> at <strong>Cavite State University – Carmona Campus</strong>, focusing on hardware systems, microcontroller firmware, and workflow engineering."
+    },
+
+    // CONTACT & RESUME
+    {
+      topic: 'contact',
+      tags: ['contact', 'email', 'phone', 'number', 'call', 'reach', 'message', 'connect', 'touch', 'location', 'where', 'based', 'address', 'live'],
+      answer: "You can reach John through:<br>• <strong>Email:</strong> <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a><br>• <strong>Phone:</strong> <a href='tel:+63971727130' class='chat-link'>+63971727130</a><br>• <strong>Location:</strong> Sta. Rosa, Laguna, Philippines<br>• <strong>Resume:</strong> <a href='resume/John%20Bautista%20Jr..pdf' target='_blank' class='chat-link'>Download Resume PDF</a>"
+    },
+    {
+      topic: 'contact',
+      tags: ['availability', 'available', 'open', 'hiring', 'job', 'opportunity', 'work', 'employ', 'looking', 'hire'],
+      answer: "John is <strong>actively open to full-time and project opportunities</strong> in Computer Engineering, Embedded Systems, IoT, IT Support, and Automation. Reach him directly at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>."
+    },
+    {
+      topic: 'identity',
+      tags: ['resume', 'cv', 'download', 'pdf'],
+      answer: "You can view and download his complete resume here: <a href='resume/John%20Bautista%20Jr..pdf' target='_blank' class='chat-link'>📄 Download John Bautista Jr. Resume (PDF)</a>"
+    },
+    {
+      topic: 'identity',
+      tags: ['chibi', 'companion', 'mascot', 'character', 'easter egg'],
+      answer: "The <strong>companion chibi</strong> is an interactive Easter egg! You can click and drag it around the screen to see its idle, walk, grab, fall, and landing animations."
+    }
   ];
 
   const SUGGESTIONS = [
-    "Walk me through the portfolio",
-    "What are John's skills?",
     "Tell me about his projects",
+    "What are John's skills?",
     "What's his experience?",
-    "Is he open to hire?",
+    "What certifications does he have?",
+    "Walk me through the portfolio",
     "How do I contact John?",
   ];
 
@@ -266,7 +359,7 @@
   function query(userInput) {
     const tokens = tokenize(userInput);
 
-    // 1. Try intent detection first
+    // 1. Check direct intent patterns first (hire, tour, specific project #, etc.)
     for (const intent of INTENTS) {
       if (intent.detect(userInput, tokens)) {
         const answer = intent.respond(userInput, tokens);
@@ -275,9 +368,9 @@
       }
     }
 
-    // 2. KB keyword scoring
+    // 2. Score KB
     if (!tokens.length) {
-      return "Could you rephrase that? Try asking about John's <strong>skills, projects, experience</strong>, or say <em>\"walk me through the portfolio\"</em>!";
+      return "Ask me anything about John's <strong>projects, technical skills, background, experience, or certifications</strong>!";
     }
 
     const ranked = KB
@@ -286,7 +379,7 @@
       .sort((a, b) => b.sc - a.sc);
 
     if (!ranked.length) {
-      return `Hmm, I didn't quite catch that. Try asking about John's <strong>skills, projects, experience, certifications</strong>, or say <em>"walk me through the portfolio"</em> for a full tour!`;
+      return "I can provide details on John's <strong>projects, skills, experience, certifications</strong>, or how to <strong>contact him</strong>. What would you like to know?";
     }
 
     const best = ranked[0].e;
@@ -304,7 +397,7 @@
     const bubble = document.getElementById('chibi-bubble');
     if (!bubble) return;
     const plain = htmlText.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    const short = plain.length > 80 ? plain.substring(0, 80) + '…' : plain;
+    const short = plain.length > 85 ? plain.substring(0, 85) + '…' : plain;
     bubble.innerHTML = `<span>${short}</span>`;
     bubble.classList.add('visible');
     if (chibiBubbleTimer) clearTimeout(chibiBubbleTimer);
@@ -312,14 +405,13 @@
   }
 
   /* ===================================================================
-     TERMINAL CHAT UI — injected into #terminal-panel
+     TERMINAL CHAT UI
      =================================================================== */
   function buildTerminalChat() {
     const panel = document.getElementById('terminal-panel');
     const screen = document.getElementById('terminal-screen');
     if (!panel || !screen) return;
 
-    // ── Styles ──────────────────────────────────────────────────────
     const style = document.createElement('style');
     style.textContent = `
       .terminal-panel {
@@ -363,7 +455,7 @@
 
       .tc-bubble {
         padding: 7px 10px;
-        max-width: 92%;
+        max-width: 95%;
         word-break: break-word;
       }
       .tc-msg.bot .tc-bubble {
@@ -393,7 +485,6 @@
       .tc-msg a.chat-link        { color: #00E5FF; text-decoration: underline; }
       .tc-msg a.chat-link:hover  { color: #fff; }
 
-      /* Typing indicator */
       .tc-typing {
         display: flex;
         align-items: center;
@@ -414,7 +505,6 @@
         40%          { transform: scaleY(1.6); opacity:1; }
       }
 
-      /* Suggestions */
       #tc-suggestions {
         padding: 5px 12px 4px;
         display: flex;
@@ -449,7 +539,6 @@
         border-color: rgba(0,229,255,0.4);
       }
 
-      /* Input row */
       #tc-input-row {
         display: flex;
         align-items: center;
@@ -501,10 +590,8 @@
     `;
     document.head.appendChild(style);
 
-    // ── Clear screen, rebuild as chat ────────────────────────────────
     screen.innerHTML = '';
 
-    // ── Suggestions ──────────────────────────────────────────────────
     const sugBlock = document.createElement('div');
     sugBlock.id = 'tc-suggestions';
     const sugLabel = document.createElement('div');
@@ -520,12 +607,11 @@
     });
     panel.insertBefore(sugBlock, panel.querySelector('.terminal-footer'));
 
-    // ── Input row ────────────────────────────────────────────────────
     const inputRow = document.createElement('div');
     inputRow.id = 'tc-input-row';
     inputRow.innerHTML = `
       <span id="tc-prompt-label">&gt;_</span>
-      <input id="tc-input" type="text" placeholder="Ask about John or type 'walk me through'..." autocomplete="off" maxlength="200" aria-label="Chat input">
+      <input id="tc-input" type="text" placeholder="Ask about projects, skills, experience..." autocomplete="off" maxlength="200" aria-label="Chat input">
       <button id="tc-send" aria-label="Send">SEND ›</button>
     `;
     panel.insertBefore(inputRow, panel.querySelector('.terminal-footer'));
@@ -534,20 +620,17 @@
     document.getElementById('tc-send').addEventListener('click', () => handleSend());
     inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
 
-    // Update terminal header label
     const titleEl = panel.querySelector('.term-title');
     if (titleEl) titleEl.textContent = 'JB-ASSIST // AI PORTFOLIO BOT';
 
-    // ── Boot messages ─────────────────────────────────────────────────
-    addSystemMsg('> Initializing JB-ASSIST v2.1...');
-    setTimeout(() => addSystemMsg('> Context engine online. Type anything or pick a quick query below.'), 500);
+    addSystemMsg('> Initializing JB-ASSIST v2.2...');
+    setTimeout(() => addSystemMsg('> Diagnostic knowledge base online.'), 400);
     setTimeout(() => {
-      const welcome = `Hey! I'm <strong>JB-Assist</strong> 👋 — John's portfolio AI. Ask about his <strong>skills, projects, experience</strong>, or say <em>"walk me through the portfolio"</em> for a full tour!`;
+      const welcome = `Hey! I'm <strong>JB-Assist</strong> 👋 — John's portfolio AI. Ask directly about his <strong>projects, skills, experience, or certifications</strong>, or pick a quick query below!`;
       addBotMsg(welcome);
       showChibiReply(welcome);
-    }, 1000);
+    }, 800);
 
-    // ── Message helpers ───────────────────────────────────────────────
     function addMsg(html, role) {
       const wrap = document.createElement('div');
       wrap.className = `tc-msg ${role}`;
@@ -590,12 +673,12 @@
         const answer = query(val);
         addBotMsg(answer);
         showChibiReply(answer);
-      }, 420 + Math.random() * 180);
+      }, 350 + Math.random() * 150);
     }
   }
 
   /* ===================================================================
-     INIT — after boot overlay dismisses
+     INIT
      =================================================================== */
   function waitAndInit() {
     const bootOverlay = document.getElementById('boot-overlay');
