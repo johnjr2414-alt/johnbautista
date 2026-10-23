@@ -694,227 +694,255 @@
         </div>
 
         <div class="projects-grid">
-          
-          <!-- PROJECT 01: T.A.S.K. KIOSK -->
-          <article class="project-card">
-            <div class="project-schematic-wrap">
-              <!-- Cyberpunk Schematic Illustration of Touchscreen Kiosk -->
-              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="#071426"/>
-                <!-- Grid background -->
-                <line x1="0" y1="60" x2="400" y2="60" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                <line x1="0" y1="120" x2="400" y2="120" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                <line x1="0" y1="180" x2="400" y2="180" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                <line x1="100" y1="0" x2="100" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                <line x1="200" y1="0" x2="200" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                <line x1="300" y1="0" x2="300" y2="240" stroke="#168BFF" stroke-width="0.5" stroke-opacity="0.2"/>
-                
-                <!-- Kiosk Frame Blueprint -->
-                <polygon points="150,210 250,210 235,140 165,140" fill="#030711" stroke="#00E5FF" stroke-width="1.5"/>
-                <rect x="140" y="30" width="120" height="110" rx="4" fill="#030711" stroke="#00E5FF" stroke-width="2"/>
-                <!-- Display Screen -->
-                <rect x="148" y="38" width="104" height="74" fill="#071426" stroke="#168BFF" stroke-width="1"/>
-                <text x="200" y="65" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="9" font-weight="bold">T.A.S.K. SYSTEM</text>
-                <text x="200" y="80" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">QUEUING DISP : #042</text>
-                <rect x="160" y="90" width="80" height="12" rx="2" fill="#00E5FF" fill-opacity="0.2" stroke="#00E5FF" stroke-width="0.8"/>
-                <text x="200" y="99" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="6">TOUCH TO SELECT</text>
-                
-                <!-- Kiosk Pedestal Details -->
-                <line x1="130" y1="210" x2="270" y2="210" stroke="#00E5FF" stroke-width="3"/>
-                <circle cx="160" cy="120" r="3" fill="#00E5FF"/>
-                <circle cx="240" cy="120" r="3" fill="#168BFF"/>
-                
-                <!-- Diagnostic HUD overlay notes -->
-                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> CAPSTONE PROJ</text>
-                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">STATUS: COMPLETED</text>
-              </svg>
-              <div class="project-chip">CAPSTONE // HARDWARE &amp; SOFTWARE</div>
-            </div>
 
+          <!-- ══════════════════════════════════════════════════════
+               PROJECT 01: T.A.S.K. Digital Queuing Kiosk
+               ══════════════════════════════════════════════════════ -->
+          <article class="project-card" data-gallery tabindex="0">
+
+            <!-- IMAGE GALLERY -->
+            <div class="project-gallery">
+              <!-- Slide 1 -->
+              <div class="gallery-slide active">
+                <img src="Projects/TASK/Task Design.png" alt="T.A.S.K. kiosk physical design" loading="lazy">
+              </div>
+              <!-- Slide 2 -->
+              <div class="gallery-slide">
+                <img src="Projects/TASK/Presentation.png" alt="T.A.S.K. project presentation poster" loading="lazy">
+              </div>
+              <!-- Slide 3 -->
+              <div class="gallery-slide">
+                <img src="Projects/TASK/Best Paper.jpg" alt="Best Paper Award — CvSU Carmona" loading="lazy">
+              </div>
+              <!-- Slide 4 -->
+              <div class="gallery-slide">
+                <img src="Projects/TASK/Best Presentation.jpg" alt="Best Presentation Award — CvSU Carmona" loading="lazy">
+              </div>
+
+              <!-- Category chip -->
+              <div class="project-chip">CAPSTONE // HARDWARE &amp; SOFTWARE</div>
+
+              <!-- Arrows -->
+              <button class="gallery-nav gallery-prev" aria-label="Previous image">&#8592;</button>
+              <button class="gallery-nav gallery-next" aria-label="Next image">&#8594;</button>
+
+              <!-- Counter -->
+              <span class="gallery-counter">1 / 4</span>
+
+              <!-- Thumbnail strip -->
+              <div class="gallery-thumbs">
+                <div class="gallery-thumb active">
+                  <img src="Projects/TASK/Task Design.png" alt="Kiosk Design" loading="lazy">
+                </div>
+                <div class="gallery-thumb">
+                  <img src="Projects/TASK/Presentation.png" alt="Presentation" loading="lazy">
+                </div>
+                <div class="gallery-thumb">
+                  <img src="Projects/TASK/Best Paper.jpg" alt="Best Paper" loading="lazy">
+                </div>
+                <div class="gallery-thumb">
+                  <img src="Projects/TASK/Best Presentation.jpg" alt="Best Presentation" loading="lazy">
+                </div>
+              </div>
+            </div><!-- /.project-gallery -->
+
+            <!-- BODY -->
             <div class="project-body">
               <div class="project-header">
                 <span class="project-num">CASE FILE 01</span>
                 <h3 class="project-title">T.A.S.K. Digital Queuing Kiosk</h3>
               </div>
+
               <p class="project-desc">
-                <strong>Transaction and Academic Services Kiosk:</strong> Designed to modernize university campus registrar queuing. Resolved congestion and wait-times through an intuitive touchscreen interface, automated ticket generation, and accessibility accommodations.
+                <strong>Transaction and Academic Services Kiosk</strong> — a university-grade digital queuing system built for CvSU's registrar and campus offices. Replaces manual queue management with a fully automated touchscreen kiosk featuring audio guidance for accessibility, camera-based student ID scanning, priority group handling, and thermal receipt printing on a Raspberry Pi platform.
               </p>
+
               <div class="project-highlights">
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Hardware integration of display terminal, microcontroller controls &amp; thermal printer</div>
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Designed accessible software workflow for diverse students and university staff</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Audio guidance reads all options aloud for visually impaired or illiterate users</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Student ID scanning via camera OCR — no manual input required</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Priority group lanes: PWD, Senior Citizens, and Pregnant Women</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Serves 4 campus offices: Registrar, Clinic, Library, OSAS</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Thermal receipt printer integration + GPIO hardware button controls</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Colorblind accessibility mode with full EULA acceptance flow</div>
               </div>
+
               <div class="project-tags">
-                <span class="p-tag">Embedded Systems</span>
-                <span class="p-tag">Hardware Integration</span>
-                <span class="p-tag">UI/UX Accessibility</span>
-                <span class="p-tag">C++ / Microcontroller</span>
+                <span class="p-tag">Node.js / Express</span>
+                <span class="p-tag">Python GPIO</span>
+                <span class="p-tag">Supabase / PostgreSQL</span>
+                <span class="p-tag">Raspberry Pi</span>
+                <span class="p-tag">OCR / Camera</span>
+                <span class="p-tag">HTML / CSS / JS</span>
               </div>
-            </div>
+
+              <div class="project-links">
+                <a href="https://task-cvsu.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-link-btn primary">
+                  &#9654; Live Demo
+                </a>
+                <a href="https://github.com/johnbautista" target="_blank" rel="noopener noreferrer" class="project-link-btn secondary">
+                  &#9657; View Code
+                </a>
+              </div>
+
+              <div class="award-badges">
+                <span class="award-badge">&#127942; Best Paper — CvSU Carmona 2026</span>
+                <span class="award-badge">&#127942; Best Presentation — CvSU Carmona 2026</span>
+              </div>
+            </div><!-- /.project-body -->
+
           </article>
 
-          <!-- PROJECT 02: SMART HELMET IOT PROTOTYPE -->
-          <article class="project-card">
-            <div class="project-schematic-wrap">
-              <!-- Smart Helmet IoT Circuit Schematic -->
-              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="#071426"/>
-                <!-- Background Grid -->
-                <circle cx="200" cy="120" r="90" stroke="#168BFF" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.3"/>
-                
-                <!-- Helmet Contour Blueprint -->
-                <path d="M 130 145 C 130 75, 270 75, 270 145 C 270 165, 250 175, 230 175 L 170 175 C 150 175, 130 165, 130 145 Z" fill="#030711" stroke="#00E5FF" stroke-width="2"/>
-                <path d="M 160 145 C 160 120, 240 120, 240 145 Z" fill="#071426" stroke="#168BFF" stroke-width="1.2"/>
-                
-                <!-- IoT Sensors and ESP32 Nodes -->
-                <rect x="188" y="100" width="24" height="20" rx="2" fill="#00E5FF" fill-opacity="0.2" stroke="#00E5FF" stroke-width="1.2"/>
-                <text x="200" y="113" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="7">ESP32</text>
-                
-                <!-- Sensor Connection Traces -->
-                <line x1="200" y1="100" x2="200" y2="70" stroke="#00E5FF" stroke-width="1.2"/>
-                <circle cx="200" cy="68" r="4" fill="#00E5FF"/>
-                <text x="210" y="70" fill="#EAF7FF" font-family="JetBrains Mono" font-size="7">IMU / ACCEL</text>
+          <!-- ══════════════════════════════════════════════════════
+               PROJECT 02: HikCentral Attendance & Payroll Gateway
+               ══════════════════════════════════════════════════════ -->
+          <article class="project-card" data-gallery tabindex="0">
 
-                <line x1="188" y1="110" x2="145" y2="110" stroke="#168BFF" stroke-width="1.2"/>
-                <circle cx="143" cy="110" r="3" fill="#168BFF"/>
-                <text x="95" y="112" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">WEAR SENSOR</text>
+            <!-- SVG ILLUSTRATION (no real photos available) -->
+            <div class="project-gallery">
+              <div class="gallery-slide svg-slide active">
+                <!-- Stylized SVG: Biometric Terminal → Webhook Server → Live Dashboard -->
+                <svg viewBox="0 0 520 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="520" height="260" fill="#030711"/>
+                  <!-- Grid lines -->
+                  <line x1="0" y1="65" x2="520" y2="65" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
+                  <line x1="0" y1="130" x2="520" y2="130" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
+                  <line x1="0" y1="195" x2="520" y2="195" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
+                  <line x1="130" y1="0" x2="130" y2="260" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
+                  <line x1="260" y1="0" x2="260" y2="260" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
+                  <line x1="390" y1="0" x2="390" y2="260" stroke="#168BFF" stroke-width="0.4" stroke-opacity="0.18"/>
 
-                <!-- Signal Waves -->
-                <path d="M 275 130 C 285 120, 285 100, 275 90" stroke="#00E5FF" stroke-width="1.5" fill="none"/>
-                <path d="M 285 140 C 300 125, 300 95, 285 80" stroke="#168BFF" stroke-width="1.5" fill="none" opacity="0.6"/>
-                
-                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> IOT PROTOTYPE</text>
-                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">SENSORS: ACTIVE</text>
-              </svg>
-              <div class="project-chip">IOT // TELEMETRY &amp; SAFETY</div>
-            </div>
+                  <!-- ── BIOMETRIC TERMINAL (left) ── -->
+                  <rect x="28" y="55" width="88" height="130" rx="4" fill="#071426" stroke="#00E5FF" stroke-width="1.8"/>
+                  <!-- Face detection grid -->
+                  <rect x="40" y="67" width="64" height="68" rx="2" fill="#030711" stroke="#168BFF" stroke-width="1.2"/>
+                  <line x1="72" y1="67" x2="72" y2="135" stroke="#168BFF" stroke-width="0.6" stroke-opacity="0.5"/>
+                  <line x1="40" y1="101" x2="104" y2="101" stroke="#168BFF" stroke-width="0.6" stroke-opacity="0.5"/>
+                  <!-- Corner brackets (face frame) -->
+                  <polyline points="44,71 44,67 48,67" fill="none" stroke="#00E5FF" stroke-width="1.4"/>
+                  <polyline points="96,71 96,67 100,67" fill="none" stroke="#00E5FF" stroke-width="1.4"/>
+                  <polyline points="44,131 44,135 48,135" fill="none" stroke="#00E5FF" stroke-width="1.4"/>
+                  <polyline points="96,131 96,135 100,135" fill="none" stroke="#00E5FF" stroke-width="1.4"/>
+                  <!-- Face dot grid -->
+                  <circle cx="58" cy="88" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <circle cx="72" cy="88" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <circle cx="86" cy="88" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <circle cx="58" cy="101" r="2" fill="#168BFF" fill-opacity="0.7"/>
+                  <circle cx="72" cy="101" r="2.5" fill="#00E5FF"/>
+                  <circle cx="86" cy="101" r="2" fill="#168BFF" fill-opacity="0.7"/>
+                  <circle cx="58" cy="114" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <circle cx="72" cy="114" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <circle cx="86" cy="114" r="2" fill="#00E5FF" fill-opacity="0.7"/>
+                  <!-- Fingerprint strip -->
+                  <rect x="50" y="140" width="44" height="14" rx="2" fill="#030711" stroke="#168BFF" stroke-width="1"/>
+                  <line x1="57" y1="143" x2="57" y2="151" stroke="#00E5FF" stroke-width="0.8"/>
+                  <line x1="62" y1="141" x2="62" y2="153" stroke="#00E5FF" stroke-width="0.8"/>
+                  <line x1="67" y1="141" x2="67" y2="153" stroke="#00E5FF" stroke-width="0.8"/>
+                  <line x1="72" y1="141" x2="72" y2="153" stroke="#00E5FF" stroke-width="0.8"/>
+                  <line x1="77" y1="141" x2="77" y2="153" stroke="#00E5FF" stroke-width="0.8"/>
+                  <line x1="82" y1="143" x2="82" y2="151" stroke="#00E5FF" stroke-width="0.8"/>
+                  <text x="72" y="173" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="6.5" font-weight="bold">BIOMETRIC</text>
+                  <text x="72" y="183" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">TERMINAL</text>
 
+                  <!-- ── ARROW 1: Terminal → Server ── -->
+                  <line x1="118" y1="130" x2="188" y2="130" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="5 3"/>
+                  <polygon points="188,126 198,130 188,134" fill="#00E5FF"/>
+                  <text x="153" y="122" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">WEBHOOK</text>
+                  <text x="153" y="131" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5">PUNCH EVENT</text>
+
+                  <!-- ── WEBHOOK / API SERVER (centre) ── -->
+                  <rect x="200" y="90" width="110" height="82" rx="3" fill="#071426" stroke="#00E5FF" stroke-width="1.8"/>
+                  <text x="255" y="109" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="7.5" font-weight="bold">API GATEWAY</text>
+                  <line x1="210" y1="115" x2="300" y2="115" stroke="#168BFF" stroke-width="0.6" stroke-opacity="0.5"/>
+                  <text x="255" y="128" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="6">Node.js + Express</text>
+                  <text x="255" y="140" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">SQLite3 + Supabase</text>
+                  <text x="255" y="152" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">HikCentral OpenAPI</text>
+                  <text x="255" y="163" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="5">SYNC: LIVE ●</text>
+
+                  <!-- ── ARROW 2: Server → Dashboard ── -->
+                  <line x1="310" y1="130" x2="375" y2="130" stroke="#168BFF" stroke-width="1.6" stroke-dasharray="5 3"/>
+                  <polygon points="375,126 385,130 375,134" fill="#168BFF"/>
+                  <text x="347" y="122" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">REST API</text>
+                  <text x="347" y="131" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5">POLL 3s</text>
+
+                  <!-- ── LIVE DASHBOARD (right) ── -->
+                  <rect x="387" y="60" width="106" height="140" rx="3" fill="#071426" stroke="#168BFF" stroke-width="1.8"/>
+                  <!-- Dashboard header bar -->
+                  <rect x="387" y="60" width="106" height="18" rx="3" fill="#168BFF" fill-opacity="0.25"/>
+                  <text x="440" y="72" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="6" font-weight="bold">ATTENDANCE LIVE</text>
+                  <!-- Row entries -->
+                  <rect x="394" y="84" width="92" height="11" rx="1" fill="#00E5FF" fill-opacity="0.08" stroke="#00E5FF" stroke-width="0.5"/>
+                  <text x="398" y="92" fill="#EAF7FF" font-family="JetBrains Mono" font-size="5.5">🤖 Santos, K.  08:02</text>
+                  <rect x="394" y="98" width="92" height="11" rx="1" fill="#168BFF" fill-opacity="0.08" stroke="#168BFF" stroke-width="0.5"/>
+                  <text x="398" y="106" fill="#EAF7FF" font-family="JetBrains Mono" font-size="5.5">👆 Reyes, M.  08:05</text>
+                  <rect x="394" y="112" width="92" height="11" rx="1" fill="#00E5FF" fill-opacity="0.08" stroke="#00E5FF" stroke-width="0.5"/>
+                  <text x="398" y="120" fill="#EAF7FF" font-family="JetBrains Mono" font-size="5.5">💳 Cruz, J.    08:09</text>
+                  <rect x="394" y="126" width="92" height="11" rx="1" fill="#168BFF" fill-opacity="0.08" stroke="#168BFF" stroke-width="0.5"/>
+                  <text x="398" y="134" fill="#EAF7FF" font-family="JetBrains Mono" font-size="5.5">🔢 Lim, A.    08:14</text>
+                  <rect x="394" y="140" width="92" height="11" rx="1" fill="#00E5FF" fill-opacity="0.08" stroke="#00E5FF" stroke-width="0.5"/>
+                  <text x="398" y="148" fill="#EAF7FF" font-family="JetBrains Mono" font-size="5.5">🤖 Garcia, P. 08:18</text>
+                  <!-- Status indicator -->
+                  <circle cx="398" cy="170" r="3" fill="#00E5FF">
+                    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                  <text x="405" y="173" fill="#00E5FF" font-family="JetBrains Mono" font-size="5.5">LIVE — 3s refresh</text>
+                  <text x="440" y="192" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="5.5">DASHBOARD</text>
+
+                  <!-- Top label -->
+                  <text x="16" y="24" fill="#8FAFC8" font-family="JetBrains Mono" font-size="8">&gt; BIOMETRIC GATEWAY</text>
+                  <text x="16" y="36" fill="#00E5FF" font-family="JetBrains Mono" font-size="7">STATUS: RECEIVING PUNCHES</text>
+                </svg>
+              </div>
+
+              <!-- Category chip -->
+              <div class="project-chip">ENTERPRISE // BIOMETRIC &amp; PAYROLL</div>
+
+              <!-- Single slide: no nav arrows needed, but kept for layout consistency -->
+              <span class="gallery-counter" style="display:none">1 / 1</span>
+              <div class="gallery-thumbs" style="display:none"></div>
+            </div><!-- /.project-gallery -->
+
+            <!-- BODY -->
             <div class="project-body">
               <div class="project-header">
                 <span class="project-num">CASE FILE 02</span>
-                <h3 class="project-title">Smart Helmet IoT Prototype</h3>
+                <h3 class="project-title">HikCentral Attendance &amp; Payroll Gateway</h3>
               </div>
+
               <p class="project-desc">
-                An intelligent connected safety helmet engineered to detect compliance (proper rider wearing) and monitor sudden impact incidents in real time using sensor telemetry and an embedded ESP32 microcontroller.
+                <strong>HikCentral &amp; Hikvision Attendance &amp; Payroll Gateway</strong> — a real-time web application and API gateway that ingests biometric punch data from the <em>Hikvision DS-K1T342MFWX-E1</em> face/fingerprint terminal and HikCentral's OpenAPI, then syncs records to a live attendance dashboard and payroll pipeline.
               </p>
+
               <div class="project-highlights">
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Interfaced accelerometer/gyroscope sensors to register high-G impacts</div>
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Wireless telemetry transmission for emergency notifications &amp; telemetry logging</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Receives face 🤖, fingerprint 👆, RFID 💳, and PIN 🔢 punch events via webhook</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Real-time dashboard updates every 3 seconds with verification method display</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Raw payload inspector for live debugging of HikCentral event streams</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> SQLite local database with automatic Supabase cloud sync</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Auto-processes CSV ACS records for bulk attendance import</div>
+                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Payroll integration pipeline: computes hours, OT, and deductions automatically</div>
               </div>
+
               <div class="project-tags">
-                <span class="p-tag">ESP32</span>
-                <span class="p-tag">Sensor Interfacing</span>
-                <span class="p-tag">Embedded C++</span>
-                <span class="p-tag">Wireless Telemetry</span>
+                <span class="p-tag">Node.js / Express</span>
+                <span class="p-tag">SQLite3</span>
+                <span class="p-tag">Supabase / PostgreSQL</span>
+                <span class="p-tag">HikCentral OpenAPI</span>
+                <span class="p-tag">Webhooks / REST</span>
+                <span class="p-tag">HTML / CSS / JS</span>
               </div>
-            </div>
+
+              <div class="project-links">
+                <a href="https://chimerical-starburst-6d1c49.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-link-btn primary">
+                  &#9654; Live Demo
+                </a>
+                <a href="https://github.com/johnbautista" target="_blank" rel="noopener noreferrer" class="project-link-btn secondary">
+                  &#9657; View Code
+                </a>
+              </div>
+            </div><!-- /.project-body -->
+
           </article>
 
-          <!-- PROJECT 03: CRM & WORKFLOW AUTOMATION -->
-          <article class="project-card">
-            <div class="project-schematic-wrap">
-              <!-- Automated Pipeline Diagram -->
-              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="#071426"/>
-                <!-- Flowchart Nodes -->
-                <rect x="30" y="95" width="85" height="50" rx="3" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
-                <text x="72" y="118" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="8">INVOICE EVENT</text>
-                <text x="72" y="132" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">TRIGGER DETECTED</text>
-
-                <!-- Connector 1 -->
-                <line x1="115" y1="120" x2="160" y2="120" stroke="#00E5FF" stroke-width="1.5"/>
-                <polygon points="160,116 168,120 160,124" fill="#00E5FF"/>
-
-                <!-- Middle Processing Node -->
-                <polygon points="210,85 260,120 210,155 160,120" fill="#030711" stroke="#00E5FF" stroke-width="1.8"/>
-                <text x="210" y="118" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="8" font-weight="bold">ZAPIER / GHL</text>
-                <text x="210" y="130" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">ROUTING RULE</text>
-
-                <!-- Connector 2 -->
-                <line x1="260" y1="120" x2="300" y2="120" stroke="#00E5FF" stroke-width="1.5"/>
-                <polygon points="300,116 308,120 300,124" fill="#00E5FF"/>
-
-                <!-- Output Action Node -->
-                <rect x="308" y="95" width="75" height="50" rx="3" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
-                <text x="345" y="118" text-anchor="middle" fill="#EAF7FF" font-family="JetBrains Mono" font-size="8">AUTO DISPATCH</text>
-                <text x="345" y="132" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">EMAIL / SMS / DB</text>
-
-                <text x="20" y="30" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> ENTERPRISE AUTOMATION</text>
-                <text x="20" y="44" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">PIPELINE: SYNCHRONIZED</text>
-              </svg>
-              <div class="project-chip">ENTERPRISE // WORKFLOW AUTOMATION</div>
-            </div>
-
-            <div class="project-body">
-              <div class="project-header">
-                <span class="project-num">CASE FILE 03</span>
-                <h3 class="project-title">CRM &amp; Invoice Workflow Automation</h3>
-              </div>
-              <p class="project-desc">
-                Developed and supported automated client communication pipelines and invoice collection systems at <strong>Moriroku Philippines</strong>. Converted labor-intensive manual follow-ups into zero-touch automated event flows.
-              </p>
-              <div class="project-highlights">
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Structured Zapier triggers &amp; GoHighLevel pipeline stages for client accounts</div>
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Created standardized SDLC documentation and execution guides for operational handover</div>
-              </div>
-              <div class="project-tags">
-                <span class="p-tag">GoHighLevel</span>
-                <span class="p-tag">Zapier Webhooks</span>
-                <span class="p-tag">Data Architecture</span>
-                <span class="p-tag">SDLC Documentation</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 04: HARDWARE DIAGNOSTICS & BENCHMARK SUITE -->
-          <article class="project-card">
-            <div class="project-schematic-wrap">
-              <!-- Hardware Diagnostic Bench Schematic -->
-              <svg class="schematic-svg" viewBox="0 0 400 240" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="#071426"/>
-                <!-- Motherboard Layout -->
-                <rect x="50" y="40" width="300" height="160" rx="4" fill="#030711" stroke="#168BFF" stroke-width="1.5"/>
-                <!-- CPU Socket -->
-                <rect x="100" y="75" width="70" height="70" fill="#071426" stroke="#00E5FF" stroke-width="1.8"/>
-                <text x="135" y="112" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">CPU SOCKET</text>
-                <text x="135" y="125" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">TEST_OK</text>
-                
-                <!-- RAM Slots -->
-                <rect x="190" y="65" width="12" height="90" fill="#071426" stroke="#168BFF" stroke-width="1"/>
-                <rect x="210" y="65" width="12" height="90" fill="#071426" stroke="#168BFF" stroke-width="1"/>
-                <text x="206" y="170" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="7">DIMM CHANNELS</text>
-
-                <!-- PCIe Slots -->
-                <rect x="90" y="165" width="160" height="15" fill="#071426" stroke="#168BFF" stroke-width="1"/>
-                <text x="170" y="176" text-anchor="middle" fill="#8FAFC8" font-family="JetBrains Mono" font-size="6">PCIE GEN 4.0 DIAGNOSTICS</text>
-
-                <text x="20" y="25" fill="#8FAFC8" font-family="JetBrains Mono" font-size="9">> BENCH DIAGNOSTIC</text>
-                <text x="20" y="38" fill="#00E5FF" font-family="JetBrains Mono" font-size="8">INTEGRITY: 100% PASS</text>
-              </svg>
-              <div class="project-chip">HARDWARE // SYSTEM DEPLOYMENT</div>
-            </div>
-
-            <div class="project-body">
-              <div class="project-header">
-                <span class="project-num">CASE FILE 04</span>
-                <h3 class="project-title">System Diagnostics &amp; Rig Deployments</h3>
-              </div>
-              <p class="project-desc">
-                Custom bench assembly, power rail multimeter testing, motherboard BIOS/UEFI firmware restoration, thermal profiling, and system image deployment across workstations and enterprise client machines.
-              </p>
-              <div class="project-highlights">
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Resolved POST/boot failures, RAM timing conflicts, and driver incompatibilities</div>
-                <div class="highlight-item"><span class="h-bullet">&#9658;</span> Configured partitioned multi-boot OS platforms and local network subnetworks</div>
-              </div>
-              <div class="project-tags">
-                <span class="p-tag">PC Rig Assembly</span>
-                <span class="p-tag">Motherboard Diagnostics</span>
-                <span class="p-tag">OS Provisioning</span>
-                <span class="p-tag">Thermal Profiling</span>
-              </div>
-            </div>
-          </article>
-
-        </div>
+        </div><!-- /.projects-grid -->
       </div>
     </section>
 
@@ -1258,7 +1286,8 @@
     </div>
   </div>
 
-  <script src="js/main.js"></script>
-  <script src="js/chatbot.js"></script>
+  <script src="js/main.js?v=2.3"></script>
+  <script src="js/chatbot.js?v=2.3"></script>
+  <script src="js/projects.js?v=1.0"></script>
 </body>
 </html>
