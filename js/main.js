@@ -369,37 +369,28 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     };
 
-    // Setup initial coordinates — wait for real paint so offsetWidth is accurate
+    // Setup initial coordinates on page load
     const setupPos = () => {
-      chibi.style.removeProperty('bottom');
-      chibi.style.removeProperty('right');
       const home = getHomePos();
-      // If dimensions still zero the element hasn't laid out — retry next frame
-      if (home.x <= 0 && home.y <= 0) {
-        requestAnimationFrame(setupPos);
-        return;
-      }
       currentX = home.x;
       currentY = home.y;
       chibi.style.left = `${currentX}px`;
       chibi.style.top = `${currentY}px`;
+      chibi.style.bottom = 'auto';
+      chibi.style.right = 'auto';
     };
-
-    // Double-rAF guarantees first real paint has occurred
-    requestAnimationFrame(() => { requestAnimationFrame(setupPos); });
-
-    // Full load (images shift layout)
+    setupPos();
+    // Re-verify position after DOM settle and window load
+    setTimeout(setupPos, 50);
     window.addEventListener('load', () => {
-      if (!isDragging && !isFalling && !isWalking) setupPos();
+      if (!isDragging && !isFalling && !isWalking) {
+        setupPos();
+      }
     });
-
-    // bfcache restore: 'load' never fires on back/forward — pageshow does
-    window.addEventListener('pageshow', () => {
-      if (!isDragging && !isFalling && !isWalking) setupPos();
-    });
-
     window.addEventListener('resize', () => {
-      if (!isDragging && !isFalling && !isWalking) setupPos();
+      if (!isDragging && !isFalling && !isWalking) {
+        setupPos();
+      }
     });
 
     // Start Gravity Drop Physics with falling1 & falling2 frame cycling
@@ -538,11 +529,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const rect = chibi.getBoundingClientRect();
       dragStartX = clientX;
       dragStartY = clientY;
-      // Re-sync currentX/currentY from actual rendered position (fixes post-reload drift)
       initialLeft = rect.left;
       initialTop = rect.top;
-      currentX = rect.left;
-      currentY = rect.top;
 
       window.addEventListener('pointermove', onPointerMove, { passive: false });
       window.addEventListener('pointerup', onPointerUp);
