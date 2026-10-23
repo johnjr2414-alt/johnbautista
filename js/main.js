@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bootDone = true;
     sessionStorage.setItem('jb_booted', 'true');
     bootOverlay.classList.add('hidden');
+    bootOverlay.style.display = 'none';
     document.body.classList.remove('initializing');
     initTerminalTyping();
   };
@@ -379,7 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
       chibi.style.right = 'auto';
     };
     setupPos();
-    // Wait until window & images fully load to recalculate position if dimensions change
+    // Re-verify position after DOM settle and window load
+    setTimeout(setupPos, 50);
     window.addEventListener('load', () => {
       if (!isDragging && !isFalling && !isWalking) {
         setupPos();
