@@ -2185,8 +2185,10 @@ a.c-val:hover {
    ========================================================================== */
 .chibi-companion {
   position: fixed;
-  bottom: 16px;
-  right: 24px;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  right: auto;
   z-index: 10005;
   display: flex;
   flex-direction: column;
