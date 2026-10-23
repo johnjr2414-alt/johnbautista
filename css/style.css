@@ -2342,3 +2342,252 @@ a.c-val:hover {
     overflow: auto !important;
   }
 }
+
+
+/* ============================================================
+   PROJECT GALLERY — Redesigned Projects Section
+   ============================================================ */
+
+/* Card layout: full-width, image on top, body below */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background: #071426;
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+.project-card:hover {
+  border-color: rgba(0, 229, 255, 0.55);
+  box-shadow: 0 0 32px rgba(0, 229, 255, 0.12), 0 0 8px rgba(22, 139, 255, 0.1);
+}
+
+/* ── Gallery wrapper ─────────────────────────────────────── */
+.project-gallery {
+  position: relative;
+  width: 100%;
+  background: #030711;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+}
+
+/* Slide images */
+.gallery-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.gallery-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* SVG illustration slide (no image) */
+.gallery-slide.svg-slide {
+  background: #030711;
+}
+.gallery-slide.svg-slide svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Navigation arrows ───────────────────────────────────── */
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(3, 7, 17, 0.75);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: #00E5FF;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+.gallery-nav:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: #00E5FF;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+.gallery-prev { left: 10px; }
+.gallery-next { right: 10px; }
+
+/* Counter badge */
+.gallery-counter {
+  position: absolute;
+  bottom: 50px;
+  right: 12px;
+  background: rgba(3, 7, 17, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #00E5FF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  z-index: 10;
+}
+
+/* ── Thumbnail strip ─────────────────────────────────────── */
+.gallery-thumbs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  background: rgba(3, 7, 17, 0.85);
+  overflow-x: auto;
+  z-index: 10;
+  scrollbar-width: none;
+}
+.gallery-thumbs::-webkit-scrollbar { display: none; }
+
+.gallery-thumb {
+  flex-shrink: 0;
+  width: 48px;
+  height: 32px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.gallery-thumb.svg-thumb {
+  background: #071426;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-thumb.svg-thumb svg {
+  width: 100%;
+  height: 100%;
+}
+.gallery-thumb.active,
+.gallery-thumb:hover {
+  opacity: 1;
+  border-color: #00E5FF;
+}
+
+/* ── Category chip overlay ───────────────────────────────── */
+.project-gallery .project-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 11;
+  margin: 0;
+}
+
+/* ── Project body (unchanged layout, updated padding) ────── */
+.project-body {
+  padding: 22px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+.project-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── Project action links ────────────────────────────────── */
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.project-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.project-link-btn.primary {
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid #00E5FF;
+  color: #00E5FF;
+}
+.project-link-btn.primary:hover {
+  background: rgba(0, 229, 255, 0.25);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
+  color: #EAF7FF;
+}
+.project-link-btn.secondary {
+  background: rgba(22, 139, 255, 0.1);
+  border: 1px solid rgba(22, 139, 255, 0.6);
+  color: #168BFF;
+}
+.project-link-btn.secondary:hover {
+  background: rgba(22, 139, 255, 0.22);
+  box-shadow: 0 0 14px rgba(22, 139, 255, 0.35);
+  color: #EAF7FF;
+}
+
+/* ── Award badges ────────────────────────────────────────── */
+.award-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.award-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #FFD700;
+  background: rgba(255, 215, 0, 0.07);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  padding: 5px 12px;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+/* ── Responsive adjustments ──────────────────────────────── */
+@media (max-width: 640px) {
+  .gallery-nav { width: 30px; height: 30px; font-size: 0.85rem; }
+  .gallery-thumb { width: 38px; height: 26px; }
+  .project-body { padding: 16px 16px 14px; }
+}

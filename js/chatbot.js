@@ -221,11 +221,19 @@
       respond: () => `You're very welcome! If you'd like to get in touch with John, he's available at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>.`
     },
 
-    // 🤖 WHO IS THE BOT
+    // 🤖 WHO IS THE BOT (Strict exact match to avoid stealing "what are..." questions)
     {
-      detect: (msg, tokens) => {
-        const lower = msg.toLowerCase();
-        return lower.includes('who are you') || lower.includes('what are you') || (tokens.includes('bot') && tokens.length <= 4) || lower === 'ai';
+      detect: (msg) => {
+        const lower = msg.toLowerCase().trim().replace(/[?!.]/g, '');
+        return (
+          lower === 'who are you' ||
+          lower === 'what are you' ||
+          lower === 'what is this bot' ||
+          lower === 'are you ai' ||
+          lower === 'who made you' ||
+          lower === 'bot' ||
+          lower === 'ai'
+        );
       },
       respond: () => `I'm <strong>JB-Assist</strong> — an AI portfolio assistant for John Bautista. I can give you thorough details on his projects, skills, education, experience, and contact info.`
     },
@@ -273,6 +281,11 @@
       topic: 'skills',
       tags: ['embedded', 'iot', 'esp32', 'arduino', 'microcontroller', 'microcontrollers', 'firmware', 'sensor', 'sensors', 'lora', 'lorawan', 'circuit', 'circuits', 'gpio'],
       answer: "John's embedded experience covers <strong>ESP32 & Arduino platforms, embedded C++, sensor bus integration (I2C/SPI), LoRaWAN telemetry with Packetworx</strong>, and schematic design/soldering."
+    },
+    {
+      topic: 'skills',
+      tags: ['autocad', 'cad', 'drafting', 'schematic', 'schematics', 'circuit design', 'pcb'],
+      answer: "While John's core engineering domains are <strong>Embedded Systems (ESP32), Hardware Diagnostics, IT Support, and Automation</strong>, he works with <strong>circuit schematics, hardware prototyping, and technical documentation</strong>. For specific CAD modeling or drafting inquiries, feel free to contact him directly at <a href='mailto:johnbautista1424@gmail.com' class='chat-link'>johnbautista1424@gmail.com</a>."
     },
 
     // EXPERIENCE
