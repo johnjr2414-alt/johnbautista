@@ -2186,7 +2186,7 @@ a.c-val:hover {
   position: fixed;
   bottom: 16px;
   right: 24px;
-  z-index: 1000;
+  z-index: 10005;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

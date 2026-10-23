@@ -379,6 +379,12 @@ document.addEventListener('DOMContentLoaded', () => {
       chibi.style.right = 'auto';
     };
     setupPos();
+    // Wait until window & images fully load to recalculate position if dimensions change
+    window.addEventListener('load', () => {
+      if (!isDragging && !isFalling && !isWalking) {
+        setupPos();
+      }
+    });
     window.addEventListener('resize', () => {
       if (!isDragging && !isFalling && !isWalking) {
         setupPos();
@@ -500,12 +506,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Drag and Drop Logic using PointerEvents for universal support
     const onPointerDown = (e) => {
+      // Don't drag if clicking a link or interactive element inside speech bubble
+      if (e.target.closest('a') || e.target.closest('button')) return;
+
       if (animFrame) cancelAnimationFrame(animFrame);
       isDragging = true;
       isFalling = false;
       isWalking = false;
       chibiImg.src = sprites.grabbed;
       chibiChar.style.transform = 'scale(1.1)';
+
+      // Capture pointer so drag remains smooth even if pointer moves quickly outside element
+      if (chibi.setPointerCapture) {
+        try { chibi.setPointerCapture(e.pointerId); } catch (_) {}
+      }
       
       const clientX = e.clientX;
       const clientY = e.clientY;
@@ -541,9 +555,13 @@ document.addEventListener('DOMContentLoaded', () => {
       chibi.style.top = `${currentY}px`;
     };
 
-    const onPointerUp = () => {
+    const onPointerUp = (e) => {
       if (!isDragging) return;
       isDragging = false;
+
+      if (e && chibi.releasePointerCapture) {
+        try { chibi.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
 
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
