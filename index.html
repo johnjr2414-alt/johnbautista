@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=Oxanium:wght@600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <link rel="stylesheet" href="css/style.css?v=3.1">
 </head>
 <body class="initializing">
 
@@ -1318,17 +1318,18 @@
   <!-- ========================================================
        INTERACTIVE CYBERPUNK CHIBI COMPANION (EASTER EGG)
        ======================================================== -->
-  <div class="chibi-companion" id="chibi-companion" title="Click or Drag me!" aria-label="Interactive Assistant Chibi">
+  <div class="chibi-companion" id="chibi-companion" title="Click or Drag me!" aria-label="Interactive Assistant Chibi" draggable="false">
     <div class="chibi-speech-bubble" id="chibi-bubble" aria-live="polite">
       <span>Welcome to John's Portfolio!</span>
     </div>
-    <div class="chibi-character" id="chibi-char">
-      <img src="Interactive Chibi/idle.png" alt="Interactive Companion Chibi" id="chibi-img">
+    <div class="chibi-character" id="chibi-char" draggable="false">
+      <img src="Interactive Chibi/idle.png" alt="Interactive Companion Chibi" id="chibi-img" draggable="false">
     </div>
   </div>
 
-  <script src="js/main.js?v=3.0"></script>
+  <script src="js/main.js?v=3.1"></script>
   <script src="js/chatbot.js?v=2.3"></script>
   <script src="js/projects.js?v=1.0"></script>
+  <script src="js/chibi.js?v=1.0"></script>
 </body>
 </html>

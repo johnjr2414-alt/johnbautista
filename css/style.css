@@ -2185,14 +2185,18 @@ a.c-val:hover {
    ========================================================================== */
 .chibi-companion {
   position: fixed;
-  bottom: 16px;
-  right: 24px;
+  left: calc(100vw - 264px);
+  top: calc(100vh - 256px);
+  bottom: auto;
+  right: auto;
   z-index: 10005;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   cursor: grab;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
   touch-action: none;
 }
 
@@ -2318,9 +2322,10 @@ a.c-val:hover {
     width: 100%;
   }
   .chibi-companion {
-    bottom: 12px;
-    right: 14px;
-    left: auto;
+    left: calc(100vw - 164px);
+    top: calc(100vh - 162px);
+    bottom: auto;
+    right: auto;
   }
   .chibi-character {
     width: 150px;
